@@ -1,9 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Oil Price Checker</title>
+    <meta charset="UTF-8">
+    <title>Thymeleaf and jQuery Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1>Welcome to Oil Price Checker</h1>
+<h1>Populate Table with jQuery</h1>
+
+<button id="fetchDataBtn">Fetch Data</button>
+
+<table id="dataTable" border="1">
+    <thead>
+    <tr>
+        <th>Supplier </th>
+        <th>Cost </th>
+        <th>Price per litre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Table rows will be populated here -->
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#fetchDataBtn').on('click', function () {
+            $.ajax({
+                url: '/prices', // Replace with your endpoint
+                method: 'GET',
+                success: function (data) {
+                    var tableBody = $('#dataTable tbody');
+                    tableBody.empty(); // Clear existing rows
+
+                    // Populate table with new data
+                    $.each(data, function (index, item) {
+                        var tableRow = '<tr>' +
+                            '<td>' + item.supplierName + '</td>' +
+                            '<td>' + item.price + '</td>' +
+                            '<td>' + item.pencePerLitre + '</td>' +
+                            '</tr>';
+                        tableBody.append(tableRow);
+                    });
+                },
+                error: function () {
+                    alert('Failed to fetch data');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
