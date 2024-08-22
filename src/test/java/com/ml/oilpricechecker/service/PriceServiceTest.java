@@ -18,7 +18,6 @@ public class PriceServiceTest {
         for (PriceResponse response: responses) {
             System.out.println("Name: " + response.getSupplierName());
             System.out.println("Price: " + response.getPrice());
-            System.out.println("Date: " + response.getCurrentDate());
             System.out.println("------------------------------");
         }
     }
