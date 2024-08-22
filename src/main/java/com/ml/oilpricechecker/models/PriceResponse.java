@@ -5,10 +5,12 @@ import java.time.LocalDate;
 public class PriceResponse {
     private String supplierName;
     private String price;
+    private int numberOfLitres;
 
-    public PriceResponse(String supplierName, String price) {
+    public PriceResponse(String supplierName, String price, int numberOfLitres) {
         this.supplierName = supplierName;
         this.price = price;
+        this.numberOfLitres = numberOfLitres;
     }
 
     public String getSupplierName() {
@@ -17,5 +19,9 @@ public class PriceResponse {
 
     public String getPrice() {
         return price;
+    }
+
+    public int getNumberOfLitres() {
+        return numberOfLitres;
     }
 }

@@ -52,7 +52,10 @@ public class PriceService {
         for (PriceRequest priceRequest: priceRequestList) {
             CompletableFuture<PriceResponse> future = CompletableFuture.supplyAsync(() -> {
                 String price = fetchData(priceRequest);
-                return new PriceResponse(priceRequest.getSupplierName(), price);
+                return new PriceResponse(
+                        priceRequest.getSupplierName(),
+                        price,
+                        priceRequest.getNumberOfLitres());
             }, executorService);
 
             futures.add(future);
@@ -77,7 +80,7 @@ public class PriceService {
 
         // Find the first match
         if (matcher.find()) {
-            extractedText = matcher.group(1);
+            extractedText = "£" + matcher.group(1);
             if (!extractedText.contains(".")) {
                 extractedText = extractedText + ".00";
             }
