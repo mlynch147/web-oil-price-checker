@@ -1,6 +1,10 @@
 package com.ml.oilpricechecker.models;
 
 import com.ml.oilpricechecker.enums.RequestType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.regex.Pattern;
 
 public class PriceRequest {
 
@@ -8,18 +12,30 @@ public class PriceRequest {
     private int numberOfLitres;
     private String urlTemplate;
     private RequestType requestType;
-    private String regex;
+    private Payload payload;
+    private Pattern pattern;
+
 
     public PriceRequest(String supplierName,
                         int numberOfLitres,
                         String urlTemplate,
-                        String regex,
+                        Pattern pattern,
                         RequestType requestType) {
         this.supplierName = supplierName;
         this.numberOfLitres = numberOfLitres;
         this.urlTemplate = urlTemplate;
-        this.regex = regex;
+        this.pattern = pattern;
         this.requestType = requestType;
+    }
+
+    public PriceRequest(String supplierName,
+                        int numberOfLitres,
+                        String urlTemplate,
+                        Pattern pattern,
+                        RequestType requestType,
+                        Payload payload) {
+        this(supplierName, numberOfLitres, urlTemplate, pattern, requestType);
+        this.payload = payload;
     }
 
     public String getSupplierName() {
@@ -34,12 +50,20 @@ public class PriceRequest {
         return formatUrl(urlTemplate, numberOfLitres);
     }
 
-    public String getRegex() {
-        return regex;
-    }
-
     public RequestType getRequestType() {
         return requestType;
+    }
+
+    public Payload getPayload() {
+        return payload;
+    }
+
+    public void addFormData(String key, String value) {
+        payload.formData.add(key, value);
+    }
+
+    public Pattern getPattern() {
+        return pattern;
     }
 
     // Method to format the URL with the number of litres
