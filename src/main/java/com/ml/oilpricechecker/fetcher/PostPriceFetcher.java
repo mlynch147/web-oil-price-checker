@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ml.oilpricechecker.models.NichollOilsFuelModel;
 import com.ml.oilpricechecker.models.PriceRequest;
 import com.ml.oilpricechecker.models.PriceResponse;
+import com.ml.oilpricechecker.util.PriceUtilities;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,7 +32,7 @@ public class PostPriceFetcher implements PriceFetcher {
             HttpEntity<Object> requestEntity = createRequestEntity(request);
             String htmlContent = restTemplate.postForObject(request.getUrl(), requestEntity, String.class);
 
-            extractedText = extractPriceFromContent(htmlContent, request.getPattern());
+            extractedText = PriceUtilities.extractPriceFromContent(htmlContent, request.getPattern());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             extractedText = "HTTP Exception: " + e.getStatusCode();
         } catch (Exception e) {
@@ -54,18 +55,4 @@ public class PostPriceFetcher implements PriceFetcher {
         }
     }
 
-    private String extractPriceFromContent(final String content, final Pattern pattern) {
-        if (content == null) {
-            return "N/A";
-        }
-        Matcher matcher = pattern.matcher(content);
-        if (matcher.find()) {
-            String extractedText = "£" + matcher.group(1);
-            if (!extractedText.contains(".")) {
-                extractedText += ".00";
-            }
-            return extractedText;
-        }
-        return "N/A";
-    }
 }
