@@ -20,7 +20,7 @@ public class PriceController {
 
          //hack
          PriceService priceService = new PriceService();
-         List<PriceResponse> pricesResponses = priceService.makeConcurrentHttpCalls();
+         List<PriceResponse> pricesResponses = priceService.makeConcurrentHttpCalls(500);
 
          for (PriceResponse priceResponse: pricesResponses) {
              data.add(PriceMapper.MapPriceResponseToPrice(priceResponse));

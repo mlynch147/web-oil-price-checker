@@ -13,7 +13,7 @@ public class PriceServiceTest {
     public void testConcurrentCalls() throws Exception {
         priceService = new PriceService();
 
-        List<PriceResponse> responses = priceService.makeConcurrentHttpCalls();
+        List<PriceResponse> responses = priceService.makeConcurrentHttpCalls(500);
 
         for (PriceResponse response: responses) {
             System.out.println("Name: " + response.getSupplierName());
