@@ -35,7 +35,7 @@ public class PriceService  {
         this.executorService = executorService;
     }
 
-    public List<PriceResponse> makeConcurrentHttpCalls(final int numberOfLitres) throws Exception {
+    public List<PriceResponse> getCurrentPrices(final int numberOfLitres) throws Exception {
         SSLUtilities.disableSSLCertificateChecking();
 
         List<PriceRequest> priceRequestList = buildPriceRequests(numberOfLitres);

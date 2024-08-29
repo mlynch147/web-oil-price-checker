@@ -27,7 +27,7 @@ public class PriceController {
          List<Price> data = new ArrayList<>();
 
          List<PriceResponse> pricesResponses =
-                 priceService.makeConcurrentHttpCalls(DEFAULT_NUMBER_OF_LITRES);
+                 priceService.getCurrentPrices(DEFAULT_NUMBER_OF_LITRES);
 
          for (PriceResponse priceResponse: pricesResponses) {
              data.add(PriceMapper.mapPriceResponseToPrice(priceResponse));
