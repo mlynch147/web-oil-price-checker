@@ -1,26 +1,25 @@
 package com.ml.oilpricechecker.models;
 
 import com.ml.oilpricechecker.enums.RequestType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.MediaType;
 
 import java.util.regex.Pattern;
 
 public class PriceRequest {
 
-    private String supplierName;
-    private int numberOfLitres;
-    private String urlTemplate;
-    private RequestType requestType;
+    private final String supplierName;
+    private final int numberOfLitres;
+    private final String urlTemplate;
+    private final RequestType requestType;
     private Payload payload;
-    private Pattern pattern;
+    private final Pattern pattern;
+    private MediaType mediaType;
 
-
-    public PriceRequest(String supplierName,
-                        int numberOfLitres,
-                        String urlTemplate,
-                        Pattern pattern,
-                        RequestType requestType) {
+    public PriceRequest(final String supplierName,
+                        final int numberOfLitres,
+                        final String urlTemplate,
+                        final Pattern pattern,
+                        final RequestType requestType) {
         this.supplierName = supplierName;
         this.numberOfLitres = numberOfLitres;
         this.urlTemplate = urlTemplate;
@@ -33,9 +32,11 @@ public class PriceRequest {
                         String urlTemplate,
                         Pattern pattern,
                         RequestType requestType,
-                        Payload payload) {
+                        Payload payload,
+                        MediaType mediaType) {
         this(supplierName, numberOfLitres, urlTemplate, pattern, requestType);
         this.payload = payload;
+        this.mediaType = mediaType;
     }
 
     public String getSupplierName() {
@@ -58,16 +59,16 @@ public class PriceRequest {
         return payload;
     }
 
-    public void addFormData(String key, String value) {
-        payload.formData.add(key, value);
-    }
-
     public Pattern getPattern() {
         return pattern;
     }
 
+    public MediaType getMediaType() {
+        return mediaType;
+    }
+
     // Method to format the URL with the number of litres
-    private String formatUrl(String urlTemplate, int numberOfLitres) {
+    private String formatUrl(final String urlTemplate, final int numberOfLitres) {
         // Assuming the placeholder is {numberOfLitres}
         return urlTemplate.replace("{numberOfLitres}", String.valueOf(numberOfLitres));
     }

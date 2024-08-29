@@ -1,9 +1,13 @@
 package com.ml.oilpricechecker.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ml.oilpricechecker.enums.RequestType;
 import com.ml.oilpricechecker.mappers.mappers.CraigFuelsAmountMapper;
+import com.ml.oilpricechecker.models.NichollOilsFuelModel;
 import com.ml.oilpricechecker.models.Payload;
 import com.ml.oilpricechecker.models.PriceRequest;
+import com.ml.oilpricechecker.models.PriceResponse;
+import com.ml.oilpricechecker.util.SSLUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +19,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.ml.oilpricechecker.models.PriceResponse;
-import com.ml.oilpricechecker.util.SSLUtilities;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 public class PriceService {
@@ -27,7 +31,7 @@ public class PriceService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust pool size as needed
 
-    public List<PriceResponse> makeConcurrentHttpCalls() throws Exception {
+    public List<PriceResponse> makeConcurrentHttpCalls(int numberOfLitres) throws Exception {
 
         SSLUtilities.disableSSLCertificateChecking();
 
@@ -37,24 +41,23 @@ public class PriceService {
 
         PriceRequest craigsFuelsPriceRequest = new PriceRequest(
                 "Craigs Fuels",
-                500,
+                numberOfLitres,
                 "https://www.craigfuels.com/purchase",
                 Pattern.compile("£(.*?)<"),
                 RequestType.POST,
-                craigsPayload);
+                craigsPayload,
+                MediaType.APPLICATION_FORM_URLENCODED);
 
         PriceRequest mcginleysPriceRequest = new PriceRequest(
                 "McGinleys Oils",
-                500,
+                numberOfLitres,
                 "https://mcginleysoil.com/",
                 Pattern.compile("<strong>" + Pattern.quote("500L") + "</strong>\\s*<p>&pound;([^<]+)</p>"),
                 RequestType.GET);
 
-
-
         Pattern mooresPattern;
-        String startingPattern = "500" + "\":";
-        if (Integer.parseInt("500") != 1000) {
+        String startingPattern = numberOfLitres + "\":";
+        if (numberOfLitres != 1000) {
             mooresPattern = Pattern.compile(Pattern.quote(startingPattern) + "(.*?),");
         } else {
             mooresPattern = Pattern.compile(Pattern.quote(startingPattern) + "(.*?)\\}");
@@ -67,15 +70,16 @@ public class PriceService {
 
         PriceRequest mooresPriceRequest = new PriceRequest(
                 "Moores Fuels",
-                500,
+                numberOfLitres,
                 "https://www.mooresfuels.com/wp-admin/admin-ajax.php",
                 mooresPattern,
                 RequestType.POST,
-                mooresPayload);
+                mooresPayload,
+                MediaType.APPLICATION_FORM_URLENCODED);
 
         PriceRequest springtownPriceRequest = new PriceRequest(
                 "Springtown Fuels",
-                500,
+                numberOfLitres,
         "https://order.springtownfuels.com/api/Quote/GetQuote" +
                 "?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity=" +
                 "{numberOfLitres}&maxSpend=0",
@@ -84,7 +88,7 @@ public class PriceService {
 
         PriceRequest campsiePriceRequest = new PriceRequest(
                 "Campsie Fuels",
-                500,
+                numberOfLitres,
                 "https://campsiefuels.com/api/Quote/GetQuote" +
                         "?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity=" +
                         "{numberOfLitres}&maxSpend=0",
@@ -93,40 +97,21 @@ public class PriceService {
 
         PriceRequest scottsPriceRequest = new PriceRequest(
                 "Scotts Fuels",
-                500,
+                numberOfLitres,
                 "https://order.scottsfuels.com/api/Quote/GetQuote" +
                         "?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity=" +
                         "{numberOfLitres}&maxSpend=0",
                 Pattern.compile("totalIncVat\":(.*?),"),
                 RequestType.GET);
 
-
-
-
-//        String DeliveryOptionWeighting = "Standard Delivery";
-//        String OrderQty;
-//        String Postcode = "BT47 4HR";
-//        String CountryCode = "UK";
-//        String ProductCode = "0002";
-//        String DeliveryScheduleWeighting = "Web 5 Day";
-
-        Payload nichollsOilPayload = new Payload();
-        mooresPayload.add("DeliveryOptionWeighting", "Standard Delivery");
-        mooresPayload.add("OrderQty", "500");
-        mooresPayload.add("Postcode", "BT47 4HR");
-        mooresPayload.add("CountryCode", "UK");
-        mooresPayload.add("ProductCode", "0002");
-        mooresPayload.add("DeliveryScheduleWeighting", "Web 5 Day");
-
         PriceRequest nichollsOilPriceRequest = new PriceRequest(
                 "Nicholls Oils",
-                500,
+                numberOfLitres,
                 "https://nicholloils.fuelsoft.co.uk/WEBPLUS/fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
                 Pattern.compile("\"TotalGoods\":(.*?),"),
                 RequestType.POST,
-                nichollsOilPayload);
-
-
+                null,
+                MediaType.APPLICATION_JSON);
 
         List<PriceRequest> priceRequestList = new ArrayList<>();
         priceRequestList.add(craigsFuelsPriceRequest);
@@ -135,7 +120,7 @@ public class PriceService {
         priceRequestList.add(campsiePriceRequest);
         priceRequestList.add(scottsPriceRequest);
         priceRequestList.add(springtownPriceRequest);
-  //      priceRequestList.add(nichollsOilPriceRequest);
+        priceRequestList.add(nichollsOilPriceRequest);
 
         List<CompletableFuture<PriceResponse>> futures = new ArrayList<>();
 
@@ -145,25 +130,8 @@ public class PriceService {
 
             if (priceRequest.getRequestType() == RequestType.GET) {
                 future = fetchPriceAsync(priceRequest, this::fetchDataWithGet);
-/*
-                future = CompletableFuture.supplyAsync(() -> {
-                            String price = fetchDataWithGet(priceRequest);
-                            return new PriceResponse(
-                                    priceRequest.getSupplierName(),
-                                    price,
-                                    priceRequest.getNumberOfLitres());
-                        }, executorService);*/
             } else {
-                //to do - new method for post...
                 future = fetchPriceAsync(priceRequest, this::fetchDataWithPost);
-/*
-                future = CompletableFuture.supplyAsync(() -> {
-                    String price = fetchDataWithPost(priceRequest);
-                    return new PriceResponse(
-                            priceRequest.getSupplierName(),
-                            price,
-                            priceRequest.getNumberOfLitres());
-                }, executorService);*/
             }
             futures.add(future);
         }
@@ -182,62 +150,53 @@ public class PriceService {
         String htmlContent = restTemplate.getForObject(url, String.class);
 
         String extractedText = "N/A";
-        Matcher matcher = request.getPattern().matcher(htmlContent);
+        if (htmlContent != null) {
+            Matcher matcher = request.getPattern().matcher(htmlContent);
 
-        // Find the first match
-        if (matcher.find()) {
-            extractedText = "£" + matcher.group(1);
-            if (!extractedText.contains(".")) {
-                extractedText = extractedText + ".00";
+            // Find the first match
+            if (matcher.find()) {
+                extractedText = "£" + matcher.group(1);
+                if (!extractedText.contains(".")) {
+                    extractedText = extractedText + ".00";
+                }
             }
         }
         return extractedText;
     }
 
-    /**
-     * NOT TESTED YET
-     *
-     * @param request
-     * @return
-     */
     public String fetchDataWithPost(PriceRequest request) {
-
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Create an HttpEntity with the form data and headers
-        // HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
-
-        // Use RestTemplate to send the POST request
-
-
-
-
-        /////////////
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Wrapping the payload in an HttpEntity with headers
-        //HttpEntity<Object> requestEntity = new HttpEntity<>(request.getPayload(), headers);
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(request.getPayload().getFormData(), headers);
-
-
-        // Sending the POST request and getting the response
-        String htmlContent = restTemplate.postForObject(request.getUrl(), requestEntity, String.class);
-
         String extractedText = "N/A";
-        Matcher matcher = request.getPattern().matcher(htmlContent);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(request.getMediaType());
 
-        // Find the first match
-        if (matcher.find()) {
-            extractedText = "£" + matcher.group(1);
-            if (!extractedText.contains(".")) {
-                extractedText = extractedText + ".00";
+            HttpEntity<Object> requestEntity;
+            if (request.getMediaType().equals(MediaType.APPLICATION_JSON)) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String postData = objectMapper.writeValueAsString(new NichollOilsFuelModel("500"));
+                requestEntity = new HttpEntity<>(postData, headers);
+            } else {
+                requestEntity = new HttpEntity<>(request.getPayload().getFormData(), headers);
             }
+            String htmlContent = restTemplate.postForObject(request.getUrl(), requestEntity, String.class);
+
+            if (htmlContent != null) {
+                Matcher matcher = request.getPattern().matcher(htmlContent);
+                if (matcher.find()) {
+                    extractedText = "£" + matcher.group(1);
+                    if (!extractedText.contains(".")) {
+                        extractedText = extractedText + ".00";
+                    }
+                }
+            }
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            extractedText = "HTTP Exception: " + e.getStatusCode();
+        } catch (Exception e) {
+            // Log any other exceptions that occur
+            extractedText = "Exception occurred: " + e.getMessage();
         }
         return extractedText;
     }
-
 
     private CompletableFuture<PriceResponse> fetchPriceAsync(
             PriceRequest priceRequest, Function<PriceRequest, String> fetchMethod) {
@@ -249,27 +208,4 @@ public class PriceService {
                     priceRequest.getNumberOfLitres());
         }, executorService);
     }
-
 }
-
-
-/*        for (int i = 0; i < urls.size(); i++) {
-            String url = urls.get(i);
-            Object payload = payloads.get(i);
-            RequestType type = types.get(i);
-
-            CompletableFuture<String> future;
-            if (type == RequestType.GET) {
-                future = CompletableFuture.supplyAsync(() -> fetchData(url), executorService);
-            } else {
-                future = CompletableFuture.supplyAsync(() -> sendData(url, payload), executorService);
-            }
-            futures.add(future);
-        }
-
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-
-        return allOf.thenApply(v -> futures.stream()
-                .map(CompletableFuture::join) // Get the HTML response
-                .collect(Collectors.toList())
-        ).get(); // Block until all results are available*/

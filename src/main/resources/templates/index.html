@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Thymeleaf and jQuery Example</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1>Populate Table with jQuery</h1>
+<h2>Prices - 500 Litres of Home Heating Oil</h2>
 
-<button id="fetchDataBtn">Fetch Data</button>
-
-<table id="dataTable" border="1">
+<button id="fetchDataBtn">Get latest prices</button>
+<p></p>
+<table id="dataTable">
     <thead>
     <tr>
         <th>Supplier </th>
@@ -27,7 +27,7 @@
     $(document).ready(function () {
         $('#fetchDataBtn').on('click', function () {
             $.ajax({
-                url: '/prices', // Replace with your endpoint
+                url: '/prices',
                 method: 'GET',
                 success: function (data) {
                     var tableBody = $('#dataTable tbody');
