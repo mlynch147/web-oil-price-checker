@@ -3,7 +3,10 @@ package com.ml.oilpricechecker.mappers.mappers;
 import com.ml.oilpricechecker.models.Price;
 import com.ml.oilpricechecker.models.PriceResponse;
 
-public class PriceMapper {
+public final class PriceMapper {
+
+    private PriceMapper() {
+    }
 
     public static final int ONE_HUNDRED = 100;
 

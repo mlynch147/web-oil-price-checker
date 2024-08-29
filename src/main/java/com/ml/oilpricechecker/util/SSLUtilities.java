@@ -8,7 +8,10 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
 
-public class SSLUtilities {
+public final class SSLUtilities {
+
+    private SSLUtilities() {
+    }
 
     public static void disableSSLCertificateChecking() throws Exception {
         TrustManager[] trustAllCerts = new TrustManager[]{

@@ -1,6 +1,9 @@
 package com.ml.oilpricechecker.mappers.mappers;
 
-public class CraigFuelsAmountMapper {
+public final class CraigFuelsAmountMapper {
+
+    private CraigFuelsAmountMapper() {
+    }
 
     public static String mapAmountToValue(final String amount) {
         switch (amount) {

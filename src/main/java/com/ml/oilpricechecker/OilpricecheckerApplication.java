@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class OilpricecheckerApplication {
+
     public static void main(final String[] args) {
         SpringApplication.run(OilpricecheckerApplication.class, args);
     }
