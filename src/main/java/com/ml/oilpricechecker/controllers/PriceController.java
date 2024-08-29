@@ -14,21 +14,23 @@ import java.util.List;
 @RestController
 public class PriceController {
 
+    public static final int DEFAULT_NUMBER_OF_LITRES = 500;
     private final PriceService priceService;
 
     @Autowired
-    public PriceController(PriceService priceService) {
+    public PriceController(final PriceService priceService) {
         this.priceService = priceService;
     }
 
      @GetMapping("/prices")
-     public List<Price> getPrices() throws Exception{
+     public List<Price> getPrices() throws Exception {
          List<Price> data = new ArrayList<>();
 
-         List<PriceResponse> pricesResponses = priceService.makeConcurrentHttpCalls(500);
+         List<PriceResponse> pricesResponses =
+                 priceService.makeConcurrentHttpCalls(DEFAULT_NUMBER_OF_LITRES);
 
          for (PriceResponse priceResponse: pricesResponses) {
-             data.add(PriceMapper.MapPriceResponseToPrice(priceResponse));
+             data.add(PriceMapper.mapPriceResponseToPrice(priceResponse));
          }
 
          return data;

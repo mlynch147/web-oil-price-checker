@@ -2,7 +2,7 @@ package com.ml.oilpricechecker.mappers.mappers;
 
 public class CraigFuelsAmountMapper {
 
-    public static String MapAmountToValue(String amount) {
+    public static String mapAmountToValue(final String amount) {
         switch (amount) {
             case "100": return "22";
             case "200": return "1";

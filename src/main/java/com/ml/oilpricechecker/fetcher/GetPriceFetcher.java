@@ -7,16 +7,16 @@ import org.springframework.web.client.RestTemplate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GetPriceFetcher implements PriceFetcher{
+public class GetPriceFetcher implements PriceFetcher {
 
     private final RestTemplate restTemplate;
 
-    public GetPriceFetcher(RestTemplate restTemplate) {
+    public GetPriceFetcher(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public PriceResponse fetchPrice(PriceRequest request) {
+    public PriceResponse fetchPrice(final PriceRequest request) {
         String url = request.getUrl();
         String htmlContent = restTemplate.getForObject(url, String.class);
 
@@ -24,12 +24,16 @@ public class GetPriceFetcher implements PriceFetcher{
         return new PriceResponse(request.getSupplierName(), extractedText, request.getNumberOfLitres());
     }
 
-    private String extractPriceFromContent(String content, Pattern pattern) {
-        if (content == null) return "N/A";
+    private String extractPriceFromContent(final String content, final Pattern pattern) {
+        if (content == null) {
+            return "N/A";
+        }
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
             String extractedText = "£" + matcher.group(1);
-            if (!extractedText.contains(".")) extractedText += ".00";
+            if (!extractedText.contains(".")) {
+                extractedText += ".00";
+            }
             return extractedText;
         }
         return "N/A";

@@ -1,12 +1,11 @@
 package com.ml.oilpricechecker.models;
 
-public class Price
-{
+public class Price {
     private String supplierName;
     private String price;
     private String pencePerLitre;
 
-    public Price(String supplierName, String price, String pencePerLitre) {
+    public Price(final String supplierName, final String price, final String pencePerLitre) {
         this.supplierName = supplierName;
         this.price = price;
         this.pencePerLitre = pencePerLitre;
@@ -16,7 +15,7 @@ public class Price
         return supplierName;
     }
 
-    public void setSupplierName(String supplierName) {
+    public void setSupplierName(final String supplierName) {
         this.supplierName = supplierName;
     }
 
@@ -24,7 +23,7 @@ public class Price
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(final String price) {
         this.price = price;
     }
 
@@ -32,7 +31,7 @@ public class Price
         return pencePerLitre;
     }
 
-    public void setPencePerLitre(String pencePerLitre) {
+    public void setPencePerLitre(final String pencePerLitre) {
         this.pencePerLitre = pencePerLitre;
     }
 }

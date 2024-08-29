@@ -27,13 +27,13 @@ public class PriceRequest {
         this.requestType = requestType;
     }
 
-    public PriceRequest(String supplierName,
-                        int numberOfLitres,
-                        String urlTemplate,
-                        Pattern pattern,
-                        RequestType requestType,
-                        Payload payload,
-                        MediaType mediaType) {
+    public PriceRequest(final String supplierName,
+                        final int numberOfLitres,
+                        final String urlTemplate,
+                        final Pattern pattern,
+                        final RequestType requestType,
+                        final Payload payload,
+                        final MediaType mediaType) {
         this(supplierName, numberOfLitres, urlTemplate, pattern, requestType);
         this.payload = payload;
         this.mediaType = mediaType;
@@ -68,8 +68,7 @@ public class PriceRequest {
     }
 
     // Method to format the URL with the number of litres
-    private String formatUrl(final String urlTemplate, final int numberOfLitres) {
-        // Assuming the placeholder is {numberOfLitres}
-        return urlTemplate.replace("{numberOfLitres}", String.valueOf(numberOfLitres));
+    private String formatUrl(final String url, final int litres) {
+        return url.replace("{numberOfLitres}", String.valueOf(litres));
     }
 }

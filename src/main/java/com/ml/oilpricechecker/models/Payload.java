@@ -15,7 +15,7 @@ public class Payload {
         return formData;
     }
 
-    public void add(String key, String value) {
+    public void add(final String key, final String value) {
         formData.add(key, value);
     }
 }

@@ -1,13 +1,11 @@
 package com.ml.oilpricechecker.models;
 
-import java.time.LocalDate;
-
 public class PriceResponse {
     private String supplierName;
     private String price;
     private int numberOfLitres;
 
-    public PriceResponse(String supplierName, String price, int numberOfLitres) {
+    public PriceResponse(final String supplierName, final String price, final int numberOfLitres) {
         this.supplierName = supplierName;
         this.price = price;
         this.numberOfLitres = numberOfLitres;

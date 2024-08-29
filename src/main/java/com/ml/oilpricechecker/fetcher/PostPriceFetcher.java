@@ -17,12 +17,12 @@ import java.util.regex.Pattern;
 public class PostPriceFetcher implements PriceFetcher {
     private final RestTemplate restTemplate;
 
-    public PostPriceFetcher(RestTemplate restTemplate) {
+    public PostPriceFetcher(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public PriceResponse fetchPrice(PriceRequest request) {
+    public PriceResponse fetchPrice(final PriceRequest request) {
         String extractedText = "N/A";
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -40,7 +40,7 @@ public class PostPriceFetcher implements PriceFetcher {
         return new PriceResponse(request.getSupplierName(), extractedText, request.getNumberOfLitres());
     }
 
-    private HttpEntity<Object> createRequestEntity(PriceRequest request) throws Exception {
+    private HttpEntity<Object> createRequestEntity(final PriceRequest request) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(request.getMediaType());
 
@@ -53,12 +53,16 @@ public class PostPriceFetcher implements PriceFetcher {
         }
     }
 
-    private String extractPriceFromContent(String content, Pattern pattern) {
-        if (content == null) return "N/A";
+    private String extractPriceFromContent(final String content, final Pattern pattern) {
+        if (content == null) {
+            return "N/A";
+        }
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
             String extractedText = "£" + matcher.group(1);
-            if (!extractedText.contains(".")) extractedText += ".00";
+            if (!extractedText.contains(".")) {
+                extractedText += ".00";
+            }
             return extractedText;
         }
         return "N/A";

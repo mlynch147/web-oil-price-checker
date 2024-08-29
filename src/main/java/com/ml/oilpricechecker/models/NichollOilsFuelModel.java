@@ -1,7 +1,7 @@
 package com.ml.oilpricechecker.models;
 public class NichollOilsFuelModel {
 
-    public NichollOilsFuelModel(String orderQty) {
+    public NichollOilsFuelModel(final String orderQty) {
         this.OrderQty = orderQty;
     }
 
@@ -11,4 +11,5 @@ public class NichollOilsFuelModel {
     public String CountryCode = "UK";
     public String ProductCode = "0002";
     public String DeliveryScheduleWeighting = "Web 5 Day";
+
 }

@@ -25,16 +25,17 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PriceService  {
 
+    public static final int ONE_THOUSAND = 1000;
     private final RestTemplate restTemplate;
     private final ExecutorService executorService;
 
     @Autowired
-    public PriceService(RestTemplate restTemplate, ExecutorService executorService) {
+    public PriceService(final RestTemplate restTemplate, final ExecutorService executorService) {
         this.restTemplate = restTemplate;
         this.executorService = executorService;
     }
 
-    public List<PriceResponse> makeConcurrentHttpCalls(int numberOfLitres) throws Exception {
+    public List<PriceResponse> makeConcurrentHttpCalls(final int numberOfLitres) throws Exception {
         SSLUtilities.disableSSLCertificateChecking();
 
         List<PriceRequest> priceRequestList = buildPriceRequests(numberOfLitres);
@@ -50,10 +51,10 @@ public class PriceService  {
                 .get();
     }
 
-    private List<PriceRequest> buildPriceRequests(int numberOfLitres) {
+    private List<PriceRequest> buildPriceRequests(final int numberOfLitres) {
         Payload craigsPayload = new Payload();
         craigsPayload.add("county", "4");
-        craigsPayload.add("required_quantity", CraigFuelsAmountMapper.MapAmountToValue("500"));
+        craigsPayload.add("required_quantity", CraigFuelsAmountMapper.mapAmountToValue("500"));
 
         PriceRequest craigsFuelsPriceRequest = new PriceRequest(
                 "Craigs Fuels",
@@ -73,7 +74,7 @@ public class PriceService  {
 
         Pattern mooresPattern;
         String startingPattern = numberOfLitres + "\":";
-        if (numberOfLitres != 1000) {
+        if (numberOfLitres != ONE_THOUSAND) {
             mooresPattern = Pattern.compile(Pattern.quote(startingPattern) + "(.*?),");
         } else {
             mooresPattern = Pattern.compile(Pattern.quote(startingPattern) + "(.*?)\\}");
@@ -96,34 +97,35 @@ public class PriceService  {
         PriceRequest springtownPriceRequest = new PriceRequest(
                 "Springtown Fuels",
                 numberOfLitres,
-                "https://order.springtownfuels.com/api/Quote/GetQuote" +
-                        "?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity=" +
-                        "{numberOfLitres}&maxSpend=0",
+                "https://order.springtownfuels.com/api/Quote/GetQuote"
+                        + "?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity="
+                        + "{numberOfLitres}&maxSpend=0",
                 Pattern.compile("totalIncVat\":(.*?),"),
                 RequestType.GET);
 
         PriceRequest campsiePriceRequest = new PriceRequest(
                 "Campsie Fuels",
                 numberOfLitres,
-                "https://campsiefuels.com/api/Quote/GetQuote" +
-                        "?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity=" +
-                        "{numberOfLitres}&maxSpend=0",
+                "https://campsiefuels.com/api/Quote/GetQuote"
+                        + "?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity="
+                        + "{numberOfLitres}&maxSpend=0",
                 Pattern.compile("\"totalPriceIncVat\":(.*?),"),
                 RequestType.GET);
 
         PriceRequest scottsPriceRequest = new PriceRequest(
                 "Scotts Fuels",
                 numberOfLitres,
-                "https://order.scottsfuels.com/api/Quote/GetQuote" +
-                        "?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity=" +
-                        "{numberOfLitres}&maxSpend=0",
+                "https://order.scottsfuels.com/api/Quote/GetQuote"
+                        + "?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity="
+                        + "{numberOfLitres}&maxSpend=0",
                 Pattern.compile("totalIncVat\":(.*?),"),
                 RequestType.GET);
 
         PriceRequest nichollsOilPriceRequest = new PriceRequest(
                 "Nicholls Oils",
                 numberOfLitres,
-                "https://nicholloils.fuelsoft.co.uk/WEBPLUS/fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
+                "https://nicholloils.fuelsoft.co.uk/WEBPLUS/"
+                        + "fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
                 Pattern.compile("\"TotalGoods\":(.*?),"),
                 RequestType.POST,
                 null,
@@ -142,7 +144,7 @@ public class PriceService  {
 
     }
 
-    private CompletableFuture<PriceResponse> fetchPriceAsync(PriceRequest request) {
+    private CompletableFuture<PriceResponse> fetchPriceAsync(final PriceRequest request) {
         com.ml.oilpricechecker.fetcher.PriceFetcher fetcher = request.getRequestType() == RequestType.GET
                 ? new GetPriceFetcher(restTemplate) : new PostPriceFetcher(restTemplate);
 

@@ -10,6 +10,8 @@ import java.util.concurrent.Executors;
 @Configuration
 public class AppConfig {
 
+    private static final int MAX_THREADS = 10;
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -18,7 +20,7 @@ public class AppConfig {
     @Bean
     public ExecutorService executorService() {
         // Define the thread pool size based on application needs
-        return Executors.newFixedThreadPool(10);
+        return Executors.newFixedThreadPool(MAX_THREADS);
     }
 }
 
