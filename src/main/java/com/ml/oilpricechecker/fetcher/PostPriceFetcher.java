@@ -46,7 +46,8 @@ public class PostPriceFetcher implements PriceFetcher {
 
         if (request.getMediaType().equals(MediaType.APPLICATION_JSON)) {
             ObjectMapper objectMapper = new ObjectMapper();
-            String postData = objectMapper.writeValueAsString(new NichollOilsFuelModel("500"));
+            String postData = objectMapper.writeValueAsString(
+                    new NichollOilsFuelModel(request.getNumberOfLitres()));
             return new HttpEntity<>(postData, headers);
         } else {
             return new HttpEntity<>(request.getPayload().getFormData(), headers);
