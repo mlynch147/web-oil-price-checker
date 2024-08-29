@@ -54,7 +54,7 @@ public class PriceService  {
     private List<PriceRequest> buildPriceRequests(final int numberOfLitres) {
         Payload craigsPayload = new Payload();
         craigsPayload.add("county", "4");
-        craigsPayload.add("required_quantity", CraigFuelsAmountMapper.mapAmountToValue("500"));
+        craigsPayload.add("required_quantity", CraigFuelsAmountMapper.mapAmountToValue(numberOfLitres));
 
         PriceRequest craigsFuelsPriceRequest = new PriceRequest(
                 "Craigs Fuels",
@@ -69,7 +69,7 @@ public class PriceService  {
                 "McGinleys Oils",
                 numberOfLitres,
                 "https://mcginleysoil.com/",
-                Pattern.compile("<strong>" + Pattern.quote("500L") + "</strong>\\s*<p>&pound;([^<]+)</p>"),
+                Pattern.compile("<strong>" + Pattern.quote(numberOfLitres + "L") + "</strong>\\s*<p>&pound;([^<]+)</p>"),
                 RequestType.GET);
 
         Pattern mooresPattern;
