@@ -2,6 +2,8 @@ package com.ml.oilpricechecker.service;
 
 import com.ml.oilpricechecker.enums.RequestType;
 
+import com.ml.oilpricechecker.fetcher.GetPriceFetcher;
+import com.ml.oilpricechecker.fetcher.PostPriceFetcher;
 import com.ml.oilpricechecker.mappers.mappers.CraigFuelsAmountMapper;
 import com.ml.oilpricechecker.models.Payload;
 import com.ml.oilpricechecker.models.PriceRequest;
@@ -142,8 +144,7 @@ public class PriceService  {
 
     private CompletableFuture<PriceResponse> fetchPriceAsync(PriceRequest request) {
         com.ml.oilpricechecker.fetcher.PriceFetcher fetcher = request.getRequestType() == RequestType.GET
-                ? new com.ml.oilpricechecker.fetcher.GetPriceFetcher(restTemplate)
-                : new com.ml.oilpricechecker.fetcher.PostPriceFetcher(restTemplate);
+                ? new GetPriceFetcher(restTemplate) : new PostPriceFetcher(restTemplate);
 
         return CompletableFuture.supplyAsync(() -> fetcher.fetchPrice(request), executorService);
     }

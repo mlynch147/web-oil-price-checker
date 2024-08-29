@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 public class PriceController {
 
-
     private final PriceService priceService;
 
     @Autowired
