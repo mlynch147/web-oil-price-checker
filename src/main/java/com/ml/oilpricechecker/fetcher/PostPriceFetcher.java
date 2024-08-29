@@ -12,9 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class PostPriceFetcher implements PriceFetcher {
     private final RestTemplate restTemplate;
 

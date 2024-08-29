@@ -69,7 +69,9 @@ public class PriceService  {
                 "McGinleys Oils",
                 numberOfLitres,
                 "https://mcginleysoil.com/",
-                Pattern.compile("<strong>" + Pattern.quote(numberOfLitres + "L") + "</strong>\\s*<p>&pound;([^<]+)</p>"),
+                Pattern.compile("<strong>"
+                        + Pattern.quote(numberOfLitres + "L")
+                        + "</strong>\\s*<p>&pound;([^<]+)</p>"),
                 RequestType.GET);
 
         Pattern mooresPattern;

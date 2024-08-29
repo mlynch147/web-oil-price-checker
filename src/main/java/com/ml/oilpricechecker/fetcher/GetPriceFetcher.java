@@ -5,9 +5,6 @@ import com.ml.oilpricechecker.models.PriceResponse;
 import com.ml.oilpricechecker.util.PriceUtilities;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class GetPriceFetcher implements PriceFetcher {
 
     private final RestTemplate restTemplate;
