@@ -31,9 +31,9 @@ public class PostPriceFetcher implements PriceFetcher {
 
             extractedText = PriceUtilities.extractPriceFromContent(htmlContent, request.getPattern());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            extractedText = "HTTP Exception: " + e.getStatusCode();
+            System.err.println("HTTP Exception: " + e.getStatusCode());
         } catch (Exception e) {
-            extractedText = "Exception occurred: " + e.getMessage();
+            System.err.println("Exception occurred: " + e.getMessage());
         }
         return new PriceResponse(request.getSupplierName(), extractedText, request.getNumberOfLitres());
     }
