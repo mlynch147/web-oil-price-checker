@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <title>Thymeleaf and jQuery Example</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../css/oilstyles.css">
 </head>
 <body>
 <h2>500 Litres of Home Heating Oil</h2>
 
 <button id="fetchDataBtn">Get latest prices</button>
 <p></p>
-<table id="dataTable" border="1">
-    <thead>
-    <tr>
-        <th>Supplier </th>
-        <th>Cost </th>
-        <th>Price per litre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Table rows will be populated here -->
-    </tbody>
-</table>
+<div class="table-container">
+    <table id="dataTable" border="1">
+        <thead>
+        <tr>
+            <th>Supplier </th>
+            <th>Cost </th>
+            <th>Price per litre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Table rows will be populated here -->
+        </tbody>
+    </table>
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {

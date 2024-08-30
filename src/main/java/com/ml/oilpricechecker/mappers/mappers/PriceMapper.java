@@ -19,6 +19,10 @@ public final class PriceMapper {
 
     private static String getPencePerLitre(final PriceResponse priceResponse) {
 
+        if (priceResponse.getPrice().equals("N/A")) {
+            return priceResponse.getPrice();
+        }
+
         int litres = priceResponse.getNumberOfLitres();
 
         String price = priceResponse.getPrice().substring(1);
