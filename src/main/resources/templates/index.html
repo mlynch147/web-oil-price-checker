@@ -9,6 +9,25 @@
 <body>
 <h2>500 Litres of Home Heating Oil</h2>
 
+<div class="radio-buttons-container">
+    <!-- First row of radio buttons -->
+    <div class="radio-row">
+        <label><input type="radio" name="litre" value="100"> 100</label>
+        <label><input type="radio" name="litre" value="200"> 200</label>
+        <label><input type="radio" name="litre" value="300"> 300</label>
+        <label><input type="radio" name="litre" value="400"> 400</label>
+        <label><input type="radio" name="litre" value="500" checked> 500</label>
+    </div>
+    <!-- Second row of radio buttons -->
+    <div class="radio-row">
+        <label><input type="radio" name="litre" value="600"> 600</label>
+        <label><input type="radio" name="litre" value="700"> 700</label>
+        <label><input type="radio" name="litre" value="800"> 800</label>
+        <label><input type="radio" name="litre" value="900"> 900</label>
+        <label><input type="radio" name="litre" value="1000"> 1000</label>
+    </div>
+</div>
+
 <button id="fetchDataBtn">Get latest prices</button>
 <p></p>
 <div class="table-container">
@@ -29,8 +48,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#fetchDataBtn').on('click', function () {
+            var selectedLitre = $('input[name="litre"]:checked').val();
+
             $.ajax({
-                url: '/prices',
+                url: '/prices/' + encodeURIComponent(selectedLitre),
                 method: 'GET',
                 success: function (data) {
                     var tableBody = $('#dataTable tbody');

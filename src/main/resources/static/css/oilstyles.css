@@ -32,14 +32,30 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    table-layout: auto; /* Use auto layout for dynamic column width */
 }
 
 th, td {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    padding:8px; /* Reduce padding to minimize extra space */
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 th {
     background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.radio-buttons-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 30%; /* Set the container width to 30% of the screen */
+}
+
+.radio-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
