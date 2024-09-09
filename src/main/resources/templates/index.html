@@ -4,7 +4,21 @@
     <meta charset="UTF-8">
     <title>Thymeleaf and jQuery Example</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script> <!-- Include Highcharts -->
     <link rel="stylesheet" href="../css/oilstyles.css">
+
+    <style>
+        .container {
+            display: flex; /* Align the table and chart side by side */
+        }
+        .table-container {
+            flex: 1; /* Make the table container occupy half the space */
+            margin-right: 20px;
+        }
+        .chart-container {
+            flex: 1; /* Make the chart container occupy the other half */
+        }
+    </style>
 </head>
 <body>
 <h2>500 Litres of Home Heating Oil</h2>
@@ -30,49 +44,82 @@
 
 <button id="fetchDataBtn">Get latest prices</button>
 <p></p>
-<div class="table-container">
-    <table id="dataTable" border="1">
-        <thead>
-        <tr>
-            <th>Supplier </th>
-            <th>Cost </th>
-            <th>Price per litre</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Table rows will be populated here -->
-        </tbody>
-    </table>
+<div class="container">
+    <div class="table-container">
+        <table id="dataTable" border="1">
+            <thead>
+            <tr>
+                <th>Supplier </th>
+                <th>Cost </th>
+                <th>Price per litre</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Table rows will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="chartContainer" class="chart-container" style="height: 400px"></div>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#fetchDataBtn').on('click', function () {
-            var selectedLitre = $('input[name="litre"]:checked').val();
 
-            $.ajax({
-                url: '/prices/' + encodeURIComponent(selectedLitre),
-                method: 'GET',
-                success: function (data) {
-                    var tableBody = $('#dataTable tbody');
-                    tableBody.empty(); // Clear existing rows
-
-                    // Populate table with new data
-                    $.each(data, function (index, item) {
-                        var tableRow = '<tr>' +
-                            '<td>' + item.supplierName + '</td>' +
-                            '<td>' + item.price + '</td>' +
-                            '<td>' + item.pencePerLitre + '</td>' +
-                            '</tr>';
-                        tableBody.append(tableRow);
-                    });
-                },
-                error: function () {
-                    alert('Failed to fetch data');
-                }
-            });
+    Highcharts.chart('chartContainer', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Oil Prices Over the Last 14 Days'
+        },
+        xAxis: {
+            categories: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14']
+        },
+        yAxis: {
+            title: {
+                text: 'Price (£)'
+            }
+        },
+        series: [
+            {
+                name: 'Oil Price',
+                data: [290, 292, 288, 289, 291, 294, 293, 290, 291, 295, 293, 294, 292, 290] // Hardcoded data for the last 14 days
+            },
+            {
+                name: 'Gas Price',
+                data: [280, 282, 281, 283, 285, 286, 288, 287, 289, 290, 292, 291, 293, 294] // Gas prices data for the last 14 days
+            }
+        ]
         });
-    });
+
+$(document).ready(function () {
+
+$('#fetchDataBtn').on('click', function () {
+var selectedLitre = $('input[name="litre"]:checked').val();
+
+$.ajax({
+    url: '/prices/' + encodeURIComponent(selectedLitre),
+    method: 'GET',
+    success: function (data) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
+
+        // Populate table with new data
+        $.each(data, function (index, item) {
+            var tableRow = '<tr>' +
+                '<td>' + item.supplierName + '</td>' +
+                '<td>' + item.price + '</td>' +
+                '<td>' + item.pencePerLitre + '</td>' +
+                '</tr>';
+            tableBody.append(tableRow);
+        });
+    },
+    error: function () {
+        alert('Failed to fetch data');
+    }
+});
+});
+});
 </script>
 </body>
 </html>
