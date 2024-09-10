@@ -61,6 +61,9 @@
     </div>
 
     <div id="chartContainer" class="chart-container" style="height: 400px"></div>
+
+    <button id="chartData">Populate chart</button>
+
 </div>
 
 <script type="text/javascript">
@@ -94,31 +97,80 @@
 
 $(document).ready(function () {
 
-$('#fetchDataBtn').on('click', function () {
-var selectedLitre = $('input[name="litre"]:checked').val();
+    $('#chartData').on('click', function() {
+        var selectedLitre = $('input[name="litre"]:checked').val();
 
-$.ajax({
-    url: '/prices/' + encodeURIComponent(selectedLitre),
-    method: 'GET',
-    success: function (data) {
-        var tableBody = $('#dataTable tbody');
-        tableBody.empty(); // Clear existing rows
+        $.ajax({
+            url: '/chart-data',
+            method: 'GET',
+            success: function(data) {
+                const supplierName = data.supplierName; // Extract supplier name
+                const chartData = data.chartData; // Extract list of ChartData objects
 
-        // Populate table with new data
-        $.each(data, function (index, item) {
-            var tableRow = '<tr>' +
-                '<td>' + item.supplierName + '</td>' +
-                '<td>' + item.price + '</td>' +
-                '<td>' + item.pencePerLitre + '</td>' +
-                '</tr>';
-            tableBody.append(tableRow);
+                // Parse the data received from the server
+                const categories = chartData.map(item => new Date(item.date).toLocaleDateString()); // Format dates for x-axis
+                const seriesData = chartData.map(item => item.value); // Extract values for y-axis
+
+                Highcharts.chart('chartContainer', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Data from Spring Boot Endpoint'
+                    },
+                    xAxis: {
+                        categories: categories, // Set categories (formatted dates)
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        }
+                    },
+                    series: [{
+                        name: supplierName,
+                        data: seriesData // Set data points
+                    }]
+                });
+            },
+            error: function() {
+                alert('Failed to fetch data');
+            }
         });
-    },
-    error: function () {
-        alert('Failed to fetch data');
-    }
-});
-});
+    });
+
+
+
+
+	$('#fetchDataBtn').on('click', function() {
+		var selectedLitre = $('input[name="litre"]:checked').val();
+
+		$.ajax({
+	    	url: '/prices/' + encodeURIComponent(selectedLitre),
+	    	method: 'GET',
+	    	success: function(data) {
+	        	var tableBody = $('#dataTable tbody');
+	        	tableBody.empty(); // Clear existing rows
+
+	        	// Populate table with new data
+	        	$.each(data, function(index, item) {
+	            	var tableRow = '<tr>' +
+	                	'<td>' + item.supplierName + '</td>' +
+	                	'<td>' + item.price + '</td>' +
+	                	'<td>' + item.pencePerLitre + '</td>' +
+	                	'</tr>';
+	            	tableBody.append(tableRow);
+	        	});
+	    	},
+	    	error: function() {
+	        	alert('Failed to fetch data');
+	    	}
+		});
+	});
+
+
 });
 </script>
 </body>
