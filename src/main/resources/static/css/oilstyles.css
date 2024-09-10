@@ -24,9 +24,9 @@ button:hover {
     background-color: #0056b3;
 }
 
-.table-container {
+/*.table-container {
     width: 40%;
-}
+}*/
 
 table {
     width: 100%;
@@ -46,16 +46,21 @@ th {
     background-color: #f2f2f2;
     font-weight: bold;
 }
-
 .radio-buttons-container {
     display: flex;
     flex-direction: column;
+    width: 100%;
     margin-bottom: 20px;
-    width: 30%; /* Set the container width to 30% of the screen */
 }
 
 .radio-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px 0;
+}
+
+.radio-row label {
+    flex: 2; /* Increase flex value to make labels take more space */
+    text-align: center;
 }
