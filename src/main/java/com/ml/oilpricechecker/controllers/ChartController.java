@@ -23,9 +23,9 @@ public class ChartController {
     }
 
      @GetMapping("/chart-data")
-     public ChartDataWithName getChartData() throws Exception {
+     public List<ChartDataWithName> getChartData() throws Exception {
 
-         ChartDataWithName chartData = chartService.getChartData();
+         List<ChartDataWithName> chartData = chartService.getChartData();
 
          return chartData;
      }

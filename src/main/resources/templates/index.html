@@ -103,36 +103,36 @@ $(document).ready(function () {
         $.ajax({
             url: '/chart-data',
             method: 'GET',
-            success: function(data) {
-                const supplierName = data.supplierName; // Extract supplier name
-                const chartData = data.chartData; // Extract list of ChartData objects
+            success: function(response) {
+                const seriesData = [];
 
-                // Parse the data received from the server
-                const categories = chartData.map(item => new Date(item.date).toLocaleDateString()); // Format dates for x-axis
-                const seriesData = chartData.map(item => item.value); // Extract values for y-axis
+                response.forEach(function (item) {
+                    const chartData = item.chartData.map(data => [new Date(data.date).getTime(), data.value]);
+                    seriesData.push({
+                        name: item.supplierName,
+                        data: chartData
+                    });
+                });
 
                 Highcharts.chart('chartContainer', {
                     chart: {
                         type: 'line'
                     },
                     title: {
-                        text: 'Data from Spring Boot Endpoint'
+                        text: 'Two Week Trend:<br>Daily Prices for 500l of Oil'
                     },
                     xAxis: {
-                        categories: categories, // Set categories (formatted dates)
+                        type: 'datetime', // Set categories (formatted dates)
                         title: {
                             text: 'Date'
                         }
                     },
                     yAxis: {
                         title: {
-                            text: 'Value'
+                            text: 'Amount (£)'
                         }
                     },
-                    series: [{
-                        name: supplierName,
-                        data: seriesData // Set data points
-                    }]
+                    series: seriesData
                 });
             },
             error: function() {
