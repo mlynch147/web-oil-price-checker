@@ -116,7 +116,7 @@ $(document).ready(function () {
                 const seriesData = [];
 
                 response.forEach(function (item) {
-                    const chartData = item.chartData.map(data => [new Date(data.date).getTime(), data.value]);
+                    const chartData = item.priceDataPoints.map(data => [new Date(data.date).getTime(), data.value]);
                     seriesData.push({
                         name: item.supplierName,
                         data: chartData

@@ -117,9 +117,9 @@ public final class FileUtil {
 
 
     // Method to read data from a file in internal storage and create a list of ChartData objects
-    public static List<ChartData> readFromFile(final String filename) {
+    public static List<PriceDataPoint> readFromFile(final String filename) {
         synchronized (LOCK) {
-            List<ChartData> dataList = new ArrayList<>();
+            List<PriceDataPoint> dataList = new ArrayList<>();
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
             try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -131,9 +131,9 @@ public final class FileUtil {
                         double value = Double.parseDouble(parts[1]);
 
                         // Assuming you have a constructor in ChartData that takes a Date and an int
-                        ChartData chartData = new ChartData(dateFormat.parse(dateString), value);
+                        PriceDataPoint priceDataPoint = new PriceDataPoint(dateFormat.parse(dateString), value);
 
-                        dataList.add(chartData);
+                        dataList.add(priceDataPoint);
                     }
                 }
             } catch (Exception e) {
@@ -144,8 +144,8 @@ public final class FileUtil {
         }
     }
 
-    public static ChartDataWithName readDataFromFile(final String fileName, final String displayName) {
-        List<ChartData> dataList = new ArrayList<>();
+    public static SupplierPriceData readDataFromFile(final String fileName, final String displayName) {
+        List<PriceDataPoint> dataList = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         try {
@@ -157,19 +157,15 @@ public final class FileUtil {
             while ((line = reader.readLine()) != null) {
                 String[] keyValue = line.split("=");
                 String date = keyValue[0];
-
-                String amount = keyValue[1];
-                System.out.println(amount);
                 double value = Double.parseDouble(keyValue[1]);
 
-                ChartData chartData = new ChartData(dateFormat.parse(date), value);
-
-                dataList.add(chartData);
+                PriceDataPoint priceDataPoint = new PriceDataPoint(dateFormat.parse(date), value);
+                dataList.add(priceDataPoint);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new ChartDataWithName(dataList, displayName);
+        return new SupplierPriceData(dataList, displayName);
     }
 }

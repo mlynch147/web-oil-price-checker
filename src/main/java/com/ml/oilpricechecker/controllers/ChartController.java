@@ -1,14 +1,11 @@
 package com.ml.oilpricechecker.controllers;
 
-import com.ml.oilpricechecker.file.ChartData;
-import com.ml.oilpricechecker.file.ChartDataWithName;
-import com.ml.oilpricechecker.models.Price;
+import com.ml.oilpricechecker.file.SupplierPriceData;
 import com.ml.oilpricechecker.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +20,9 @@ public class ChartController {
     }
 
      @GetMapping("/chart-data")
-     public List<ChartDataWithName> getChartData() throws Exception {
+     public List<SupplierPriceData> getChartData() throws Exception {
 
-         List<ChartDataWithName> chartData = chartService.getChartData();
+         List<SupplierPriceData> chartData = chartService.getChartData();
 
          return chartData;
      }

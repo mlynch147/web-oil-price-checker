@@ -2,12 +2,12 @@ package com.ml.oilpricechecker.file;
 
 import java.util.Date;
 
-public class ChartData {
+public class PriceDataPoint {
 
     private Date date;
     private double value;
 
-    public ChartData(final Date date, final double value) {
+    public PriceDataPoint(final Date date, final double value) {
         this.date = date;
         this.value = value;
 
