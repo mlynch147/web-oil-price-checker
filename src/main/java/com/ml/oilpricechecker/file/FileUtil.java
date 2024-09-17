@@ -20,9 +20,7 @@ public final class FileUtil {
     private static final Object LOCK = new Object();
     public static final int MAX_CHART_DATA_DAYS = 14;
     public static final int MAX_WEEKLY_COMPARISON_DAYS = 8;
-
     private static final String BASE_PATH = "src/main/data/";
-
 
     // Method to write data to a file in internal storage
     public static void writeToFile(final String filename, final String newDate, final String newAmount) {
@@ -77,7 +75,6 @@ public final class FileUtil {
         }
     }
 
-
     public static List<FileData> getCurrentFileContent(final String filename) {
         List<FileData> dataList = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -90,43 +87,13 @@ public final class FileUtil {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] keyValue = line.split("=");
-
                     dataList.add(new FileData(keyValue[0], keyValue[1]));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return dataList;
     }
 
-
-    //Essentially a duplicate of the method above... could remove this and do the PriceDataPoint somewhere else...  ChartService perhaps...
-    public static SupplierPriceData readDataFromFile(final String fileName, final String displayName) {
-        List<PriceDataPoint> dataList = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        try {
-            Path filePath = Paths.get(BASE_PATH, fileName);
-
-            try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] keyValue = line.split("=");
-                    String date = keyValue[0];
-                    double value = Double.parseDouble(keyValue[1]);
-
-                    PriceDataPoint priceDataPoint =
-                            new PriceDataPoint(dateFormat.parse(date), value);
-                    dataList.add(priceDataPoint);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new SupplierPriceData(dataList, displayName);
-    }
 }
