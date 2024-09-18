@@ -60,11 +60,9 @@ public class FileWriterService {
                     FileUtil.writeToFile("six_months_craigs.txt", date, price.getPrice().substring(1));
                 }
                 if (price.getSupplierName().toLowerCase().contains("scott")) {
-                    FileUtil.writeToFile("scotts.txt", date, price.getPrice().substring(1));
                     FileUtil.writeToFile("six_months_scotts.txt", date, price.getPrice().substring(1));
                 }
                 if (price.getSupplierName().toLowerCase().contains("campsie")) {
-                    FileUtil.writeToFile("campsie.txt", date, price.getPrice().substring(1));
                     FileUtil.writeToFile("six_months_campsie.txt", date, price.getPrice().substring(1));
                 }
                 if (price.getSupplierName().toLowerCase().contains("mcginley")) {

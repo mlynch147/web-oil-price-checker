@@ -28,6 +28,17 @@ public class ChartService {
             "weekly_comparison_springtown.txt", "Springtown Fuels"
     );
 
+    public static Map<String, String> sixMonthsDataMap = Map.of(
+            "six_months_campsie.txt", "Campsie Fuels",
+            "six_monthscraigs.txt", "Craig Fuels",
+            "six_months_mcginleys.txt", "McGinley Oils",
+            "six_months_moores.txt", "Moores Fuels",
+            "six_months_nichollOils.txt", "Nicholl Oils",
+            "six_months_scotts.txt", "Scotts Fuels",
+            "six_months_springtown.txt", "Springtown Fuels"
+    );
+
+
     public List<SupplierPriceData> getChartData() {
 
         SupplierPriceData craigs = createChartData("craigs.txt", "Craig Fuels");
@@ -80,4 +91,14 @@ public class ChartService {
         return new SupplierPriceData(dataList, displayName);
     }
 
+    public List<SupplierPriceData> getSixMonthData() {
+
+        List<SupplierPriceData> allSuppliersData = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : sixMonthsDataMap.entrySet()) {
+            allSuppliersData.add(createChartData(entry.getKey(), entry.getValue()));
+        }
+
+        return allSuppliersData;
+    }
 }

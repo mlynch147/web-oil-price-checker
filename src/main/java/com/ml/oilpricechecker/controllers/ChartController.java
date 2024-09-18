@@ -20,15 +20,13 @@ public class ChartController {
         this.chartService = chartService;
     }
 
-     @GetMapping("/chart-data")
-     public List<SupplierPriceData> getChartData() throws Exception {
+     @GetMapping("/fourteen-day-comparison")
+     public List<SupplierPriceData> getFourteenDayComparisonData() throws Exception {
 
          List<SupplierPriceData> chartData = chartService.getChartData();
 
          return chartData;
      }
-
-
 
     @GetMapping("/weekly-comparison")
     public List<WeeklyComparison> getWeeklyComparisonData() throws Exception {
@@ -37,5 +35,12 @@ public class ChartController {
 
         return weeklyComparisons;
     }
-}
 
+    @GetMapping("/six-month-comparison")
+    public List<SupplierPriceData> getSixMonthComparisonData() throws Exception {
+
+        List<SupplierPriceData> chartData = chartService.getSixMonthData();
+
+        return chartData;
+    }
+}

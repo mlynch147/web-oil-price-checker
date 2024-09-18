@@ -120,10 +120,8 @@
 
     $(document).ready(function () {
         $('#twoWeekButton').on('click', function() {
-            var selectedLitre = $('input[name="litre"]:checked').val();
-
             $.ajax({
-                url: '/chart-data',
+                url: '/fourteen-day-comparison',
                 method: 'GET',
                 success: function(response) {
                     const seriesData = [];
@@ -252,31 +250,44 @@
 
         // New chart data population for the second new chart
         $('#sixMonthsButton').on('click', function() {
-            Highcharts.chart('sixMonthsPriceContainer', {
-                chart: {
-                    type: 'line'
+            $.ajax({
+                url: '/six-month-comparison',
+                method: 'GET',
+                success: function(response) {
+                    const seriesData = [];
+
+                    response.forEach(function (item) {
+                        const chartData = item.priceDataPoints.map(data => [new Date(data.date).getTime(), data.value]);
+                        seriesData.push({
+                            name: item.supplierName,
+                            data: chartData
+                        });
+                    });
+
+                    Highcharts.chart('sixMonthsPriceContainer', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Six month trend:<br>Prices for 500 litres of Oil'
+                        },
+                        xAxis: {
+                            type: 'datetime', // Set categories (formatted dates)
+                            title: {
+                                text: 'Date'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Amount (£)'
+                            }
+                        },
+                        series: seriesData
+                    });
                 },
-                title: {
-                    text: 'Six month trend:<br>Prices for 500 litres of Oil'
-                },
-                xAxis: {
-                    categories: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14']
-                },
-                yAxis: {
-                    title: {
-                        text: 'Price (£)'
-                    }
-                },
-                series: [
-                    {
-                        name: 'Supplier 5',
-                        data: [310, 312, 308, 309, 311, 314, 313, 310, 311, 315, 313, 314, 312, 310] // Example data
-                    },
-                    {
-                        name: 'Supplier 6',
-                        data: [300, 302, 301, 303, 305, 306, 308, 307, 309, 310, 312, 311, 313, 314] // Example data
-                    }
-                ]
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
         });
     });
