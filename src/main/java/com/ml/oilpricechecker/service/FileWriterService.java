@@ -5,7 +5,6 @@ import com.ml.oilpricechecker.models.Price;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.FileWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,12 +22,27 @@ public class FileWriterService {
             for (Price price: prices) {
                 if (price.getSupplierName().toLowerCase().contains("craig")) {
                     FileUtil.writeToFile("craigs.txt", date, price.getPrice().substring(1));
+                    FileUtil.writeToFile("weekly_comparison_craigs.txt", date, price.getPrice().substring(1));
                 }
                 if (price.getSupplierName().toLowerCase().contains("scott")) {
                     FileUtil.writeToFile("scotts.txt", date, price.getPrice().substring(1));
+                    FileUtil.writeToFile("weekly_comparison_scotts.txt", date, price.getPrice().substring(1));
                 }
                 if (price.getSupplierName().toLowerCase().contains("campsie")) {
                     FileUtil.writeToFile("campsie.txt", date, price.getPrice().substring(1));
+                    FileUtil.writeToFile("weekly_comparison_campsie.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("mcginley")) {
+                    FileUtil.writeToFile("weekly_comparison_mcginleys.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("moore")) {
+                    FileUtil.writeToFile("weekly_comparison_moores.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("nicholl")) {
+                    FileUtil.writeToFile("weekly_comparison_nichollOils.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("springtown")) {
+                    FileUtil.writeToFile("weekly_comparison_springtown.txt", date, price.getPrice().substring(1));
                 }
             }
         } catch (Exception e) {
@@ -36,6 +50,8 @@ public class FileWriterService {
             e.printStackTrace();
         }
     }
+
+
 
     private String getDateAsString() {
         LocalDate today = LocalDate.now();
