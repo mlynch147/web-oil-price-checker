@@ -197,33 +197,58 @@
 
         // New chart data population for the first new chart
         $('#weeklyComparisonButton').on('click', function() {
-            Highcharts.chart('weeklyComparisonContainer', {
-                chart: {
-                    type: 'line'
+            $.ajax({
+                url: '/weekly-comparison',
+                method: 'GET',
+                success: function(response) {
+                    const suppliers = [];
+                    const todaysPrices = [];
+                    const weekOldPrices = [];
+
+                    response.forEach(function(item) {
+                        suppliers.push(item.supplierName);
+                        todaysPrices.push(item.todaysPrice);
+                        weekOldPrices.push(item.weekOldPrice);
+                    });
+
+                    Highcharts.chart('weeklyComparisonContainer', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Weekly Comparison of Prices'
+                        },
+                        xAxis: {
+                            categories: suppliers,
+                            title: {
+                                text: 'Suppliers'
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Price (£)'
+                            }
+                        },
+                        series: [
+                            {
+                                name: 'Today',
+                                data: todaysPrices
+                            },
+                            {
+                                name: '7 Days Ago',
+                                data: weekOldPrices
+                            }
+                        ]
+                    });
                 },
-                title: {
-                    text: 'Weekly Comparison:<br>500 litres of Oil'
-                },
-                xAxis: {
-                    categories: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14']
-                },
-                yAxis: {
-                    title: {
-                        text: 'Price (£)'
-                    }
-                },
-                series: [
-                    {
-                        name: 'Supplier 3',
-                        data: [300, 302, 298, 299, 301, 304, 303, 300, 301, 305, 303, 304, 302, 300] // Example data
-                    },
-                    {
-                        name: 'Supplier 4',
-                        data: [290, 292, 291, 293, 295, 296, 298, 297, 299, 300, 302, 301, 303, 304] // Example data
-                    }
-                ]
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
         });
+
+
 
         // New chart data population for the second new chart
         $('#sixMonthsButton').on('click', function() {

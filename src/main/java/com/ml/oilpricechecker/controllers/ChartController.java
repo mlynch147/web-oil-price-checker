@@ -1,6 +1,7 @@
 package com.ml.oilpricechecker.controllers;
 
 import com.ml.oilpricechecker.file.SupplierPriceData;
+import com.ml.oilpricechecker.models.WeeklyComparison;
 import com.ml.oilpricechecker.service.ChartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +27,15 @@ public class ChartController {
 
          return chartData;
      }
+
+
+
+    @GetMapping("/weekly-comparison")
+    public List<WeeklyComparison> getWeeklyComparisonData() throws Exception {
+
+        List<WeeklyComparison> weeklyComparisons = chartService.getWeeklyComparisonData();
+
+        return weeklyComparisons;
+    }
 }
 
