@@ -20,6 +20,7 @@ public final class FileUtil {
     private static final Object LOCK = new Object();
     public static final int MAX_CHART_DATA_DAYS = 14;
     public static final int MAX_WEEKLY_COMPARISON_DAYS = 8;
+    public static final int MAX_SIX_MONTH_ENTRIES = 26;
     private static final String BASE_PATH = "src/main/data/";
 
     // Method to write data to a file in internal storage
@@ -46,10 +47,14 @@ public final class FileUtil {
 
             // If the key does not exist, add a new entry
             if (!keyExists) {
-                // Remove the first entry if there are already 14 entries
+                // Remove the first entry if we have reached the maximum allowed
 
                 if (filename.contains("weekly_comparison_")) {
                     if (dataList.size() >= MAX_WEEKLY_COMPARISON_DAYS) {
+                        dataList.remove(0);
+                    }
+                } else if (filename.contains("six_months_")) {
+                    if (dataList.size() >= MAX_SIX_MONTH_ENTRIES) {
                         dataList.remove(0);
                     }
                 } else {

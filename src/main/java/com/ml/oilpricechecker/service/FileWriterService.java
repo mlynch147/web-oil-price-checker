@@ -51,6 +51,41 @@ public class FileWriterService {
         }
     }
 
+    public void writeSixMonthDataToFile(final List<Price> prices) {
+        try {
+            String date = getDateAsString();
+
+            for (Price price: prices) {
+                if (price.getSupplierName().toLowerCase().contains("craig")) {
+                    FileUtil.writeToFile("six_months_craigs.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("scott")) {
+                    FileUtil.writeToFile("scotts.txt", date, price.getPrice().substring(1));
+                    FileUtil.writeToFile("six_months_scotts.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("campsie")) {
+                    FileUtil.writeToFile("campsie.txt", date, price.getPrice().substring(1));
+                    FileUtil.writeToFile("six_months_campsie.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("mcginley")) {
+                    FileUtil.writeToFile("six_months_mcginleys.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("moore")) {
+                    FileUtil.writeToFile("six_months_moores.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("nicholl")) {
+                    FileUtil.writeToFile("six_months_nichollOils.txt", date, price.getPrice().substring(1));
+                }
+                if (price.getSupplierName().toLowerCase().contains("springtown")) {
+                    FileUtil.writeToFile("six_months_springtown.txt", date, price.getPrice().substring(1));
+                }
+            }
+        } catch (Exception e) {
+            // Handle exception
+            e.printStackTrace();
+        }
+    }
+
 
 
     private String getDateAsString() {
