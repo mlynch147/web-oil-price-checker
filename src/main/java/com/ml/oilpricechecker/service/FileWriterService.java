@@ -15,15 +15,9 @@ public class FileWriterService {
 
     public static final int MILLIS = 2000;
 
-    @Async  // This makes the method asynchronous
+    @Async
     public void writePricesToFile(final List<Price> prices) {
-        // Logic to write the list of prices to a file
-        // Example: Write to a CSV, JSON, etc.
-        // Make sure this runs asynchronously.
-        // For instance, using a BufferedWriter or Files API
         try {
-            // Simulate file writing with a sleep
-            System.out.println("Writing data to file...");
             String date = getDateAsString();
 
             for (Price price: prices) {
@@ -37,7 +31,6 @@ public class FileWriterService {
                     FileUtil.writeToFile("campsie.txt", date, price.getPrice().substring(1));
                 }
             }
-            // Actual file writing logic here
         } catch (Exception e) {
             // Handle exception
             e.printStackTrace();

@@ -151,9 +151,13 @@ $(document).ready(function () {
     });
 
 
-
-
 	$('#fetchDataBtn').on('click', function() {
+	    $('tbody tr').each(function() {
+            // Clear the content of the second and third columns (index 1 and 2)
+            $(this).find('td').eq(1).text('');
+            $(this).find('td').eq(2).text('');
+        });
+
 		var selectedLitre = $('input[name="litre"]:checked').val();
 
 		$.ajax({
