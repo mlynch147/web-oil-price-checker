@@ -18,6 +18,9 @@
         .chart-container {
             flex: 1; /* Make the chart container occupy the other half */
         }
+        .new-chart-container {
+            margin-top: 20px; /* Add some space between the charts */
+        }
     </style>
 </head>
 <body>
@@ -34,14 +37,14 @@
             </tr>
             </thead>
             <tbody>
-                <!-- Table rows will be populated here -->
-                <tr><td>Craigs Fuels</td><td></td><td></td></tr>
-                <tr><td>Moores Fuels</td><td></td><td></td></tr>
-                <tr><td>McGinleys Oils</td><td></td><td></td></tr>
-                <tr><td>Campsie Fuels</td><td></td><td></td></tr>
-                <tr><td>Scotts Fuels</td><td></td><td></td></tr>
-                <tr><td>Springtown Fuels</td><td></td><td></td></tr>
-                <tr><td>Nicholls Oils</td><td></td><td></td></tr>
+            <!-- Table rows will be populated here -->
+            <tr><td>Craigs Fuels</td><td></td><td></td></tr>
+            <tr><td>Moores Fuels</td><td></td><td></td></tr>
+            <tr><td>McGinleys Oils</td><td></td><td></td></tr>
+            <tr><td>Campsie Fuels</td><td></td><td></td></tr>
+            <tr><td>Scotts Fuels</td><td></td><td></td></tr>
+            <tr><td>Springtown Fuels</td><td></td><td></td></tr>
+            <tr><td>Nicholls Oils</td><td></td><td></td></tr>
             </tbody>
         </table>
 
@@ -67,17 +70,28 @@
         </div>
         <p></p>
         <button id="fetchDataBtn">Get latest prices</button>
+
+        <!-- New Chart Container Below Table -->
+        <div id="bottomTableContainer" class="new-chart-container" style="height: 400px;">
+            <div id="weeklyComparisonContainer"></div>
+            <button id="weeklyComparisonButton">Weekly comparison</button>
+        </div>
     </div>
 
     <div id="charts-container" class="chart-container" style="height: 400px">
-        <div id="chartContainer"></div>
-        <button id="chartData">Populate chart</button>
+        <div id="twoWeekDailyPriceContainer"></div>
+        <button id="twoWeekButton">Changes over last 14 days</button>
+
+        <!-- New Chart Container Below Existing Chart -->
+        <div id="bottomChartContainer" class="new-chart-container" style="height: 400px;">
+            <div id="sixMonthsPriceContainer"></div>
+            <button id="sixMonthsButton">Changes over last 6 months</button>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
-
-    Highcharts.chart('chartContainer', {
+    Highcharts.chart('twoWeekDailyPriceContainer', {
         chart: {
             type: 'line'
         },
@@ -102,89 +116,146 @@
                 data: [280, 282, 281, 283, 285, 286, 288, 287, 289, 290, 292, 291, 293, 294] // Gas prices data for the last 14 days
             }
         ]
-        });
-
-$(document).ready(function () {
-
-    $('#chartData').on('click', function() {
-        var selectedLitre = $('input[name="litre"]:checked').val();
-
-        $.ajax({
-            url: '/chart-data',
-            method: 'GET',
-            success: function(response) {
-                const seriesData = [];
-
-                response.forEach(function (item) {
-                    const chartData = item.priceDataPoints.map(data => [new Date(data.date).getTime(), data.value]);
-                    seriesData.push({
-                        name: item.supplierName,
-                        data: chartData
-                    });
-                });
-
-                Highcharts.chart('chartContainer', {
-                    chart: {
-                        type: 'line'
-                    },
-                    title: {
-                        text: 'Two Week Trend:<br>Daily Prices for 500l of Oil'
-                    },
-                    xAxis: {
-                        type: 'datetime', // Set categories (formatted dates)
-                        title: {
-                            text: 'Date'
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Amount (£)'
-                        }
-                    },
-                    series: seriesData
-                });
-            },
-            error: function() {
-                alert('Failed to fetch data');
-            }
-        });
     });
 
+    $(document).ready(function () {
+        $('#twoWeekButton').on('click', function() {
+            var selectedLitre = $('input[name="litre"]:checked').val();
 
-	$('#fetchDataBtn').on('click', function() {
-	    $('tbody tr').each(function() {
-            // Clear the content of the second and third columns (index 1 and 2)
-            $(this).find('td').eq(1).text('');
-            $(this).find('td').eq(2).text('');
+            $.ajax({
+                url: '/chart-data',
+                method: 'GET',
+                success: function(response) {
+                    const seriesData = [];
+
+                    response.forEach(function (item) {
+                        const chartData = item.priceDataPoints.map(data => [new Date(data.date).getTime(), data.value]);
+                        seriesData.push({
+                            name: item.supplierName,
+                            data: chartData
+                        });
+                    });
+
+                    Highcharts.chart('twoWeekDailyPriceContainer', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Two Week Trend:<br>Daily Prices for 500l of Oil'
+                        },
+                        xAxis: {
+                            type: 'datetime', // Set categories (formatted dates)
+                            title: {
+                                text: 'Date'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Amount (£)'
+                            }
+                        },
+                        series: seriesData
+                    });
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
+            });
         });
 
-		var selectedLitre = $('input[name="litre"]:checked').val();
+        $('#fetchDataBtn').on('click', function() {
+            $('tbody tr').each(function() {
+                // Clear the content of the second and third columns (index 1 and 2)
+                $(this).find('td').eq(1).text('');
+                $(this).find('td').eq(2).text('');
+            });
 
-		$.ajax({
-	    	url: '/prices/' + encodeURIComponent(selectedLitre),
-	    	method: 'GET',
-	    	success: function(data) {
-	        	var tableBody = $('#dataTable tbody');
-	        	tableBody.empty(); // Clear existing rows
+            var selectedLitre = $('input[name="litre"]:checked').val();
 
-	        	// Populate table with new data
-	        	$.each(data, function(index, item) {
-	            	var tableRow = '<tr>' +
-	                	'<td>' + item.supplierName + '</td>' +
-	                	'<td>' + item.price + '</td>' +
-	                	'<td>' + item.pencePerLitre + '</td>' +
-	                	'</tr>';
-	            	tableBody.append(tableRow);
-	        	});
-	    	},
-	    	error: function() {
-	        	alert('Failed to fetch data');
-	    	}
-		});
-	});
+            $.ajax({
+                url: '/prices/' + encodeURIComponent(selectedLitre),
+                method: 'GET',
+                success: function(data) {
+                    var tableBody = $('#dataTable tbody');
+                    tableBody.empty(); // Clear existing rows
 
+                    // Populate table with new data
+                    $.each(data, function(index, item) {
+                        var tableRow = '<tr>' +
+                            '<td>' + item.supplierName + '</td>' +
+                            '<td>' + item.price + '</td>' +
+                            '<td>' + item.pencePerLitre + '</td>' +
+                            '</tr>';
+                        tableBody.append(tableRow);
+                    });
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
+            });
+        });
 
-});
+        // New chart data population for the first new chart
+        $('#weeklyComparisonButton').on('click', function() {
+            Highcharts.chart('weeklyComparisonContainer', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Weekly Comparison:<br>500 litres of Oil'
+                },
+                xAxis: {
+                    categories: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Price (£)'
+                    }
+                },
+                series: [
+                    {
+                        name: 'Supplier 3',
+                        data: [300, 302, 298, 299, 301, 304, 303, 300, 301, 305, 303, 304, 302, 300] // Example data
+                    },
+                    {
+                        name: 'Supplier 4',
+                        data: [290, 292, 291, 293, 295, 296, 298, 297, 299, 300, 302, 301, 303, 304] // Example data
+                    }
+                ]
+            });
+        });
+
+        // New chart data population for the second new chart
+        $('#sixMonthsButton').on('click', function() {
+            Highcharts.chart('sixMonthsPriceContainer', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Six month trend:<br>Prices for 500 litres of Oil'
+                },
+                xAxis: {
+                    categories: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Price (£)'
+                    }
+                },
+                series: [
+                    {
+                        name: 'Supplier 5',
+                        data: [310, 312, 308, 309, 311, 314, 313, 310, 311, 315, 313, 314, 312, 310] // Example data
+                    },
+                    {
+                        name: 'Supplier 6',
+                        data: [300, 302, 301, 303, 305, 306, 308, 307, 309, 310, 312, 311, 313, 314] // Example data
+                    }
+                ]
+            });
+        });
+    });
 </script>
+
 </body>
 </html>
