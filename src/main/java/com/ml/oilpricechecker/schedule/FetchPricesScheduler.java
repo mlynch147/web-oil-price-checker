@@ -20,7 +20,6 @@ public class FetchPricesScheduler {
     private final PriceService priceService;
     private final FileWriterService fileWriterService;
 
-    // Constructor injection of the MyService dependency
     @Autowired
     public FetchPricesScheduler(final PriceService priceService,
                                 final FileWriterService fileWriterService) {
@@ -32,22 +31,18 @@ public class FetchPricesScheduler {
     public void executeDailyTask() throws Exception {
         System.out.println("Running daily scheduled task");
 
-        List<Price> data = new ArrayList<>();
-
-        List<PriceResponse> pricesResponses =
-                priceService.getCurrentPrices(DEFAULT_NUMBER_OF_LITRES);
-
-        for (PriceResponse priceResponse: pricesResponses) {
-            data.add(PriceMapper.mapPriceResponseToPrice(priceResponse));
-        }
-
+        List<Price> data = getOilPrices();
         CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
     }
 
     @Scheduled(cron = "0 0 12 ? * FRI")
     public void executeWeeklyTask() throws Exception {
         System.out.println("Running weekly scheduled task");
+        List<Price> data = getOilPrices();
+        CompletableFuture.runAsync(() -> fileWriterService.writeSixMonthDataToFile(data));
+    }
 
+    private List<Price> getOilPrices() throws Exception {
         List<Price> data = new ArrayList<>();
 
         List<PriceResponse> pricesResponses =
@@ -56,7 +51,6 @@ public class FetchPricesScheduler {
         for (PriceResponse priceResponse: pricesResponses) {
             data.add(PriceMapper.mapPriceResponseToPrice(priceResponse));
         }
-
-        CompletableFuture.runAsync(() -> fileWriterService.writeSixMonthDataToFile(data));
+        return data;
     }
 }
