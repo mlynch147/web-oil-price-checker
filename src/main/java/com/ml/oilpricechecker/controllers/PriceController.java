@@ -1,5 +1,6 @@
 package com.ml.oilpricechecker.controllers;
 
+import com.ml.oilpricechecker.comparators.PriceComparator;
 import com.ml.oilpricechecker.mappers.mappers.PriceMapper;
 import com.ml.oilpricechecker.models.Price;
 import com.ml.oilpricechecker.models.PriceResponse;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,6 +50,7 @@ public class PriceController {
              CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
          }
 
+         Collections.sort(data, new PriceComparator());
          return data;
      }
 
