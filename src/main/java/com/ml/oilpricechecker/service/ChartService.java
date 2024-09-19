@@ -30,7 +30,7 @@ public class ChartService {
 
     public static Map<String, String> sixMonthsDataMap = Map.of(
             "six_months_campsie.txt", "Campsie Fuels",
-            "six_monthscraigs.txt", "Craig Fuels",
+            "six_months_craigs.txt", "Craig Fuels",
             "six_months_mcginleys.txt", "McGinley Oils",
             "six_months_moores.txt", "Moores Fuels",
             "six_months_nichollOils.txt", "Nicholl Oils",
