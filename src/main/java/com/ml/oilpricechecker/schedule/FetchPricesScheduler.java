@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -27,17 +28,17 @@ public class FetchPricesScheduler {
         this.fileWriterService = fileWriterService;
     }
 
-    @Scheduled(cron = "0 6 13 * * ?")
+    @Scheduled(cron = "0 6 9,13,16 * * ?")
     public void executeDailyTask() throws Exception {
-        System.out.println("Running daily scheduled task");
+        System.out.println("Running daily scheduled task at " + new Date(System.currentTimeMillis()));
 
         List<Price> data = getOilPrices();
         CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
     }
 
-    @Scheduled(cron = "0 0 13 ? * FRI")
+    @Scheduled(cron = "0 0 9,13,16 ? * FRI")
     public void executeWeeklyTask() throws Exception {
-        System.out.println("Running weekly scheduled task");
+        System.out.println("Running weekly scheduled task at " + new Date(System.currentTimeMillis()));
         List<Price> data = getOilPrices();
         CompletableFuture.runAsync(() -> fileWriterService.writeSixMonthDataToFile(data));
     }

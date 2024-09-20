@@ -1,22 +1,20 @@
 package com.ml.oilpricechecker.file;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class PriceDataPoint {
 
-    private Date date;
+    private LocalDate date;
     private double value;
 
-    public PriceDataPoint(final Date date, final double value) {
+    public PriceDataPoint(final LocalDate date, final double value) {
         this.date = date;
         this.value = value;
 
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
+        date.atTime(0, 0, 0);
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return  date;
     }
 

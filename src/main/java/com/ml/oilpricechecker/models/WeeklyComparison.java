@@ -22,7 +22,7 @@ public class WeeklyComparison {
         return supplierName;
     }
 
-    public void setSupplierName(String supplierName) {
+    public void setSupplierName(final String supplierName) {
         this.supplierName = supplierName;
     }
 
@@ -30,7 +30,7 @@ public class WeeklyComparison {
         return todaysPrice;
     }
 
-    public void setTodaysPrice(double todaysPrice) {
+    public void setTodaysPrice(final double todaysPrice) {
         this.todaysPrice = todaysPrice;
     }
 
@@ -38,7 +38,7 @@ public class WeeklyComparison {
         return weekOldPrice;
     }
 
-    public void setWeekOldPrice(double weekOldPrice) {
+    public void setWeekOldPrice(final double weekOldPrice) {
         this.weekOldPrice = weekOldPrice;
     }
 }

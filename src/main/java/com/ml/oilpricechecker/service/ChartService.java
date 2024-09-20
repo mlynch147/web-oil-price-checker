@@ -7,8 +7,8 @@ import com.ml.oilpricechecker.file.FileUtil;
 import com.ml.oilpricechecker.models.WeeklyComparison;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +17,9 @@ import java.util.Map;
 
 @Service
 public class ChartService {
+
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault());
 
     public static Map<String, String> weeklyDataMap = Map.of(
             "weekly_comparison_campsie.txt", "Campsie Fuels",
@@ -72,21 +75,16 @@ public class ChartService {
 
         List<FileData> fileData = FileUtil.getCurrentFileContent(filename);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         List<PriceDataPoint> dataList = new ArrayList<>();
 
         for (FileData data: fileData) {
 
             PriceDataPoint priceDataPoint = null;
-            try {
-                priceDataPoint = new PriceDataPoint(
-                        dateFormat.parse(data.getDate()), Double.parseDouble(data.getAmount()));
+            priceDataPoint = new PriceDataPoint(
+                    LocalDate.parse(data.getDate(), DATE_FORMATTER),
+                    Double.parseDouble(data.getAmount()));
 
-                dataList.add(priceDataPoint);
-
-            } catch (ParseException e) {
-               e.printStackTrace();
-            }
+            dataList.add(priceDataPoint);
         }
         return new SupplierPriceData(dataList, displayName);
     }

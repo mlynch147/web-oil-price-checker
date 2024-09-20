@@ -23,8 +23,8 @@ public final class FileUtil {
     public static final int MAX_SIX_MONTH_ENTRIES = 26;
 
     // External directory path
-    private static final String EXTERNAL_BASE_PATH = System.getProperty("user.home") +
-            "/Library/Application Support/oilpricechecker/";
+    private static final String EXTERNAL_BASE_PATH = System.getProperty("user.home")
+            + "/Library/Application Support/oilpricechecker/";
 
     // Method to initialize and copy all files from resources to external directory
     public static void initializeFiles() {
