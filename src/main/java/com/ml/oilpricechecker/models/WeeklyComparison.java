@@ -5,17 +5,13 @@ public class WeeklyComparison {
     private String supplierName;
     private double todaysPrice;
     private double weekOldPrice;
-
-    public WeeklyComparison(final String supplierName, final double todaysPrice, final double weekOldPrice) {
-        this.supplierName = supplierName;
-        this.todaysPrice = todaysPrice;
-        this.weekOldPrice = weekOldPrice;
-    }
+    private double priceDifference;
 
     public WeeklyComparison(final String supplierName, final String todaysPrice, final String weekOldPrice) {
         this.supplierName = supplierName;
         this.todaysPrice = Double.parseDouble(todaysPrice);
         this.weekOldPrice = Double.parseDouble(weekOldPrice);
+        this.priceDifference = this.todaysPrice - this.weekOldPrice;
     }
 
     public String getSupplierName() {
@@ -41,4 +37,9 @@ public class WeeklyComparison {
     public void setWeekOldPrice(final double weekOldPrice) {
         this.weekOldPrice = weekOldPrice;
     }
+
+    public double getPriceDifference() {
+        return priceDifference;
+    }
+
 }

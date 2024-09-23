@@ -200,13 +200,36 @@
                 method: 'GET',
                 success: function(response) {
                     const suppliers = [];
-                    const todaysPrices = [];
-                    const weekOldPrices = [];
+                    const priceDifferences = [];
 
+                    // Prepare data for the chart (suppliers and price differences)
                     response.forEach(function(item) {
                         suppliers.push(item.supplierName);
-                        todaysPrices.push(item.todaysPrice);
-                        weekOldPrices.push(item.weekOldPrice);
+
+                        if (item.priceDifference === 0) {
+                            priceDifferences.push({
+                                y: item.priceDifference,
+                                color: 'gray',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: 'No Change',
+                                    style: {
+                                        color: 'black',  // Change text color to black for better contrast
+                                        fontSize: '14px'  // Increase the font size
+                                    }
+                                },
+                                today: item.todaysPrice,
+                                weekAgo: item.weekOldPrice
+                            });
+                        } else {
+                            // For positive/negative differences, color the bars
+                            priceDifferences.push({
+                                y: item.priceDifference,
+                                color: item.priceDifference > 0 ? '#FF9999' : '#90EE90',  // Red for positive, Green for negative
+                                today: item.todaysPrice,
+                                weekAgo: item.weekOldPrice
+                            });
+                        }
                     });
 
                     Highcharts.chart('weeklyComparisonContainer', {
@@ -214,7 +237,7 @@
                             type: 'column'
                         },
                         title: {
-                            text: 'Weekly Comparison of Prices'
+                            text: 'Weekly Price Difference Comparison'
                         },
                         xAxis: {
                             categories: suppliers,
@@ -222,20 +245,27 @@
                                 text: 'Suppliers'
                             }
                         },
+
                         yAxis: {
-                            min: 0,
                             title: {
-                                text: 'Price (£)'
+                                text: 'Price Difference (£)'
+                            },
+                            // Ensure negative values are rendered
+                            plotLines: [{
+                                color: 'black', // Add a line at y=0 to clearly separate positive and negative values
+                                width: 2,
+                                value: 0
+                            }]
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return `<b>${this.x}</b><br/>Today's Price: £${this.point.today.toFixed(2)}<br/>7 Days Ago: £${this.point.weekAgo.toFixed(2)}<br/>Difference: £${this.y.toFixed(2)}`;
                             }
                         },
                         series: [
                             {
-                                name: 'Today',
-                                data: todaysPrices
-                            },
-                            {
-                                name: '7 Days Ago',
-                                data: weekOldPrices
+                                name: 'Price Difference',
+                                data: priceDifferences
                             }
                         ]
                     });
