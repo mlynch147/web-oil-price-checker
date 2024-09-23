@@ -1,3 +1,43 @@
+/*.container {
+    display: flex; *//* Align the table and chart side by side *//*
+}
+.table-container {
+    flex: 1; *//* Make the table container occupy half the space *//*
+    margin-right: 20px;
+}
+.chart-container {
+    flex: 1; *//* Make the chart container occupy the other half *//*
+}
+.new-chart-container {
+    margin-top: 20px; *//* Add some space between the charts *//*
+}*/
+
+
+/* Existing styles */
+.container {
+    display: flex; /* Align the table and chart side by side */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+}
+.table-container, .chart-container {
+    flex: 1; /* Make the containers occupy equal space */
+    margin-right: 20px;
+}
+.new-chart-container {
+    margin-top: 20px; /* Add some space between the charts */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack items vertically */
+    }
+    .table-container, .chart-container {
+        margin-right: 0; /* Remove right margin */
+    }
+}
+
+
+
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
@@ -46,20 +86,19 @@ th {
     background-color: #f2f2f2;
     font-weight: bold;
 }
+
 .radio-buttons-container {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin-bottom: 20px;
 }
-
 .radio-row {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 5px 0;
 }
-
 .radio-row label {
     flex: 2; /* Increase flex value to make labels take more space */
     text-align: center;
