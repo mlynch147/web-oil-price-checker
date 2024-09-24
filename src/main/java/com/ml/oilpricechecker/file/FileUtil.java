@@ -61,6 +61,9 @@ public final class FileUtil {
     public static void writeToFile(final String filename, final String newDate, final String newAmount) {
         synchronized (LOCK) {
             try {
+                //try and parse the amount before writing...
+                Double.parseDouble(newAmount);
+
                 Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
                 List<FileData> dataList = getCurrentFileContent(filename);
 
@@ -105,6 +108,8 @@ public final class FileUtil {
 
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (NumberFormatException e) {
+                System.err.println("Not writing unparsable amount to file");
             }
         }
     }
