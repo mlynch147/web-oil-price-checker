@@ -163,17 +163,16 @@
                 url: '/prices/' + encodeURIComponent(selectedLitre),
                 method: 'GET',
                 success: function(data) {
-                    var tableBody = $('#dataTable tbody');
-                    tableBody.empty(); // Clear existing rows
+                    // Iterate over the rows and update the content one by one with a delay
+                    $('tbody tr').each(function(index) {
+                        var row = $(this);
 
-                    // Populate table with new data
-                    $.each(data, function(index, item) {
-                        var tableRow = '<tr>' +
-                            '<td>' + item.supplierName + '</td>' +
-                            '<td>' + item.price + '</td>' +
-                            '<td>' + item.pencePerLitre + '</td>' +
-                            '</tr>';
-                        tableBody.append(tableRow);
+                        // Use setTimeout to introduce a delay for each row update
+                        setTimeout(function() {
+                            row.find('td').eq(0).text(data[index].supplierName);
+                            row.find('td').eq(1).text(data[index].price);
+                            row.find('td').eq(2).text(data[index].pencePerLitre);
+                        }, index * 250); // Delay each row by 250ms
                     });
                 },
                 error: function() {
