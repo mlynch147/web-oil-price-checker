@@ -136,6 +136,11 @@
                                 text: 'Amount (£)'
                             }
                         },
+                        tooltip: {
+                            pointFormatter: function() {
+                                return `<span style="color:${this.series.color}">\u25CF</span> ${this.series.name}: <b>£${this.y.toFixed(2)}</b><br/>`;
+                            }
+                        },
                         series: seriesData
                     });
                 },
@@ -294,6 +299,11 @@
                         yAxis: {
                             title: {
                                 text: 'Amount (£)'
+                            }
+                        },
+                        tooltip: {
+                            pointFormatter: function() {
+                                return `<span style="color:${this.series.color}">\u25CF</span> ${this.series.name}: <b>£${this.y.toFixed(2)}</b><br/>`;
                             }
                         },
                         series: seriesData
