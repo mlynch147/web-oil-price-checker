@@ -169,10 +169,10 @@
 
                         // Use setTimeout to introduce a delay for each row update
                         setTimeout(function() {
-                            row.find('td').eq(0).css('opacity', 0).text(data[index].supplierName).animate({ opacity: 1 }, 1000);
-                            row.find('td').eq(1).css('opacity', 0).text(data[index].price).animate({ opacity: 1 }, 1000);
-                            row.find('td').eq(2).css('opacity', 0).text(data[index].pencePerLitre).animate({ opacity: 1 }, 1000);
-                        }, index * 250); // Delay each row by 250ms
+                            row.find('td').eq(0).css('opacity', 0).text(data[index].supplierName).animate({ opacity: 1 }, 1500);
+                            row.find('td').eq(1).css('opacity', 0).text(data[index].price).animate({ opacity: 1 }, 1500);
+                            row.find('td').eq(2).css('opacity', 0).text(data[index].pencePerLitre).animate({ opacity: 1 }, 1500);
+                        }, index * 300); // Delay each row by 250ms
                     });
                 },
                 error: function() {
