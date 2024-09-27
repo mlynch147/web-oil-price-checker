@@ -36,7 +36,7 @@ public class FetchPricesScheduler {
         CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
     }
 
-    @Scheduled(cron = "0 0 9,13,16 ? * FRI")
+    @Scheduled(cron = "0 59 8,12,15 ? * FRI")
     public void executeWeeklyTask() throws Exception {
         System.out.println("Running weekly scheduled task at " + new Date(System.currentTimeMillis()));
         List<Price> data = getOilPrices();

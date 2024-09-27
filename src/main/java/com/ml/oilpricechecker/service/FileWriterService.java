@@ -23,25 +23,19 @@ public class FileWriterService {
                 if (price.getSupplierName().toLowerCase().contains("craig")) {
                     FileUtil.writeToFile("craigs.txt", date, price.getPrice().substring(1));
                     FileUtil.writeToFile("weekly_comparison_craigs.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("scott")) {
+                } else if (price.getSupplierName().toLowerCase().contains("scott")) {
                     FileUtil.writeToFile("scotts.txt", date, price.getPrice().substring(1));
                     FileUtil.writeToFile("weekly_comparison_scotts.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("campsie")) {
+                } else if (price.getSupplierName().toLowerCase().contains("campsie")) {
                     FileUtil.writeToFile("campsie.txt", date, price.getPrice().substring(1));
                     FileUtil.writeToFile("weekly_comparison_campsie.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("mcginley")) {
+                } else if (price.getSupplierName().toLowerCase().contains("mcginley")) {
                     FileUtil.writeToFile("weekly_comparison_mcginleys.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("moore")) {
+                } else if (price.getSupplierName().toLowerCase().contains("moore")) {
                     FileUtil.writeToFile("weekly_comparison_moores.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("nicholl")) {
+                } else if (price.getSupplierName().toLowerCase().contains("nicholl")) {
                     FileUtil.writeToFile("weekly_comparison_nichollOils.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("springtown")) {
+                } else if (price.getSupplierName().toLowerCase().contains("springtown")) {
                     FileUtil.writeToFile("weekly_comparison_springtown.txt", date, price.getPrice().substring(1));
                 }
             }
@@ -58,23 +52,17 @@ public class FileWriterService {
             for (Price price: prices) {
                 if (price.getSupplierName().toLowerCase().contains("craig")) {
                     FileUtil.writeToFile("six_months_craigs.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("scott")) {
+                } else if (price.getSupplierName().toLowerCase().contains("scott")) {
                     FileUtil.writeToFile("six_months_scotts.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("campsie")) {
+                } else if (price.getSupplierName().toLowerCase().contains("campsie")) {
                     FileUtil.writeToFile("six_months_campsie.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("mcginley")) {
+                } else if (price.getSupplierName().toLowerCase().contains("mcginley")) {
                     FileUtil.writeToFile("six_months_mcginleys.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("moore")) {
+                } else if (price.getSupplierName().toLowerCase().contains("moore")) {
                     FileUtil.writeToFile("six_months_moores.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("nicholl")) {
+                } else if (price.getSupplierName().toLowerCase().contains("nicholl")) {
                     FileUtil.writeToFile("six_months_nichollOils.txt", date, price.getPrice().substring(1));
-                }
-                if (price.getSupplierName().toLowerCase().contains("springtown")) {
+                } else if (price.getSupplierName().toLowerCase().contains("springtown")) {
                     FileUtil.writeToFile("six_months_springtown.txt", date, price.getPrice().substring(1));
                 }
             }
