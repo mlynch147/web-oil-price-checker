@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Thymeleaf and jQuery Example</title>
+    <title>BT47/48 Oil Price Checker</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script> <!-- Include Highcharts -->
     <link rel="stylesheet" href="../css/oilstyles.css">
+    <link rel="icon" href="/house.png" type="image/png">
 </head>
 <body>
-<h2>500 Litres of Home Heating Oil</h2>
+<h2 id="tableName">500 Litres of Home Heating Oil</h2>
 
 <div class="container">
     <div class="table-container">
@@ -158,6 +159,8 @@
             });
 
             var selectedLitre = $('input[name="litre"]:checked').val();
+            var heading = $('#tableName');
+            heading.text(selectedLitre +  ' Litres of Home Heating Oil');
 
             $.ajax({
                 url: '/prices/' + encodeURIComponent(selectedLitre),
