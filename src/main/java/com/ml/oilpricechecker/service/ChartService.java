@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.ml.oilpricechecker.constants.Constants.*;
+
 @Service
 public class ChartService {
 
@@ -22,31 +24,31 @@ public class ChartService {
             DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault());
 
     public static Map<String, String> weeklyDataMap = Map.of(
-            "weekly_comparison_campsie.txt", "Campsie Fuels",
-            "weekly_comparison_craigs.txt", "Craig Fuels",
-            "weekly_comparison_mcginleys.txt", "McGinley Oils",
-            "weekly_comparison_moores.txt", "Moores Fuels",
-            "weekly_comparison_nichollOils.txt", "Nicholl Oils",
-            "weekly_comparison_scotts.txt", "Scotts Fuels",
-            "weekly_comparison_springtown.txt", "Springtown Fuels"
+            WEEKLY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
+            WEEKLY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
+            WEEKLY_MCGINLEY_FILE_NAME, MCGINLEY_DISPLAY_NAME,
+            WEEKLY_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
+            WEEKLY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
+            WEEKLY_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
+            WEEKLY_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME
     );
 
     public static Map<String, String> sixMonthsDataMap = Map.of(
-            "six_months_campsie.txt", "Campsie Fuels",
-            "six_months_craigs.txt", "Craig Fuels",
-            "six_months_mcginleys.txt", "McGinley Oils",
-            "six_months_moores.txt", "Moores Fuels",
-            "six_months_nichollOils.txt", "Nicholl Oils",
-            "six_months_scotts.txt", "Scotts Fuels",
-            "six_months_springtown.txt", "Springtown Fuels"
+            SIX_MONTHS_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
+            SIX_MONTHS_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
+            SIX_MONTHS_MCGINLEY_FILE_NAME, MCGINLEY_DISPLAY_NAME,
+            SIX_MONTHS_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
+            SIX_MONTHS_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
+            SIX_MONTHS_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
+            SIX_MONTHS_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME
     );
 
 
     public List<SupplierPriceData> getChartData() {
 
-        SupplierPriceData craigs = createChartData("craigs.txt", "Craig Fuels");
-        SupplierPriceData scotts = createChartData("scotts.txt", "Scotts Fuels");
-        SupplierPriceData campsie = createChartData("campsie.txt", "Campsie Fuels");
+        SupplierPriceData craigs = createChartData(FOURTEEN_DAY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME);
+        SupplierPriceData scotts = createChartData(FOURTEEN_DAY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME);
+        SupplierPriceData campsie = createChartData(FOURTEEN_DAY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME);
 
         return Arrays.asList(craigs, scotts, campsie);
     }
@@ -79,8 +81,7 @@ public class ChartService {
 
         for (FileData data: fileData) {
 
-            PriceDataPoint priceDataPoint = null;
-            priceDataPoint = new PriceDataPoint(
+            PriceDataPoint priceDataPoint = new PriceDataPoint(
                     LocalDate.parse(data.getDate(), DATE_FORMATTER),
                     Double.parseDouble(data.getAmount()));
 

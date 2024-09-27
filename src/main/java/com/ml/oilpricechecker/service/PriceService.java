@@ -1,5 +1,6 @@
 package com.ml.oilpricechecker.service;
 
+import com.ml.oilpricechecker.constants.Constants;
 import com.ml.oilpricechecker.enums.RequestType;
 
 import com.ml.oilpricechecker.fetcher.GetPriceFetcher;
@@ -57,7 +58,7 @@ public class PriceService  {
         craigsPayload.add("required_quantity", CraigFuelsAmountMapper.mapAmountToValue(numberOfLitres));
 
         PriceRequest craigsFuelsPriceRequest = new PriceRequest(
-                "Craigs Fuels",
+                Constants.CRAIGS_DISPLAY_NAME,
                 numberOfLitres,
                 "https://www.craigfuels.com/purchase",
                 Pattern.compile("£(.*?)<"),
@@ -66,7 +67,7 @@ public class PriceService  {
                 MediaType.APPLICATION_FORM_URLENCODED);
 
         PriceRequest mcginleysPriceRequest = new PriceRequest(
-                "McGinleys Oils",
+                Constants.MCGINLEY_DISPLAY_NAME,
                 numberOfLitres,
                 "https://mcginleysoil.com/",
                 Pattern.compile("<strong>"
@@ -88,7 +89,7 @@ public class PriceService  {
         mooresPayload.add("productId", "4790");
 
         PriceRequest mooresPriceRequest = new PriceRequest(
-                "Moores Fuels",
+                Constants.MOORES_DISPLAY_NAME,
                 numberOfLitres,
                 "https://www.mooresfuels.com/wp-admin/admin-ajax.php",
                 mooresPattern,
@@ -97,7 +98,7 @@ public class PriceService  {
                 MediaType.APPLICATION_FORM_URLENCODED);
 
         PriceRequest springtownPriceRequest = new PriceRequest(
-                "Springtown Fuels",
+                Constants.SPRINGTOWN_DISPLAY_NAME,
                 numberOfLitres,
                 "https://order.springtownfuels.com/api/Quote/GetQuote"
                         + "?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity="
@@ -106,7 +107,7 @@ public class PriceService  {
                 RequestType.GET);
 
         PriceRequest campsiePriceRequest = new PriceRequest(
-                "Campsie Fuels",
+                Constants.CAMPSIE_DISPLAY_NAME,
                 numberOfLitres,
                 "https://campsiefuels.com/api/Quote/GetQuote"
                         + "?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity="
@@ -115,7 +116,7 @@ public class PriceService  {
                 RequestType.GET);
 
         PriceRequest scottsPriceRequest = new PriceRequest(
-                "Scotts Fuels",
+                Constants.SCOTTS_DISPLAY_NAME,
                 numberOfLitres,
                 "https://order.scottsfuels.com/api/Quote/GetQuote"
                         + "?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity="
@@ -124,7 +125,7 @@ public class PriceService  {
                 RequestType.GET);
 
         PriceRequest nichollsOilPriceRequest = new PriceRequest(
-                "Nicholls Oils",
+                Constants.NICHOLLS_DISPLAY_NAME,
                 numberOfLitres,
                 "https://nicholloils.fuelsoft.co.uk/WEBPLUS/"
                         + "fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
