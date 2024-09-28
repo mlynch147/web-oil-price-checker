@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +22,11 @@ public class ChartService {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault());
 
+    public static Map<String, String> fourteenDayDataMap = Map.of(
+            FOURTEEN_DAY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
+            FOURTEEN_DAY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
+            FOURTEEN_DAY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME);
+
     public static Map<String, String> weeklyDataMap = Map.of(
             WEEKLY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
             WEEKLY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
@@ -30,8 +34,7 @@ public class ChartService {
             WEEKLY_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
             WEEKLY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
             WEEKLY_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
-            WEEKLY_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME
-    );
+            WEEKLY_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME);
 
     public static Map<String, String> sixMonthsDataMap = Map.of(
             SIX_MONTHS_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
@@ -40,17 +43,18 @@ public class ChartService {
             SIX_MONTHS_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
             SIX_MONTHS_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
             SIX_MONTHS_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
-            SIX_MONTHS_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME
-    );
+            SIX_MONTHS_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME);
 
 
     public List<SupplierPriceData> getChartData() {
 
-        SupplierPriceData craigs = createChartData(FOURTEEN_DAY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME);
-        SupplierPriceData scotts = createChartData(FOURTEEN_DAY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME);
-        SupplierPriceData campsie = createChartData(FOURTEEN_DAY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME);
+        List<SupplierPriceData> suppliersData = new ArrayList<>();
 
-        return Arrays.asList(craigs, scotts, campsie);
+        for (Map.Entry<String, String> entry : fourteenDayDataMap.entrySet()) {
+            suppliersData.add(createChartData(entry.getKey(), entry.getValue()));
+        }
+
+        return suppliersData;
     }
 
     public List<WeeklyComparison> getWeeklyComparisonData() {
@@ -60,7 +64,6 @@ public class ChartService {
         for (Map.Entry<String, String> entry : weeklyDataMap.entrySet()) {
             String fileName = entry.getKey();
             String displayName = entry.getValue();
-
             List<FileData> weeklyData = FileUtil.getCurrentFileContent(fileName);
 
             weeklyComparisons.add(new WeeklyComparison(
@@ -68,10 +71,19 @@ public class ChartService {
                     weeklyData.get(weeklyData.size() - 1).getAmount(),
                     weeklyData.get(0).getAmount()));
         }
-
         return weeklyComparisons;
     }
 
+    public List<SupplierPriceData> getSixMonthData() {
+
+        List<SupplierPriceData> allSuppliersData = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : sixMonthsDataMap.entrySet()) {
+            allSuppliersData.add(createChartData(entry.getKey(), entry.getValue()));
+        }
+
+        return allSuppliersData;
+    }
 
     private SupplierPriceData createChartData(final String filename, final String displayName) {
 
@@ -88,16 +100,5 @@ public class ChartService {
             dataList.add(priceDataPoint);
         }
         return new SupplierPriceData(dataList, displayName);
-    }
-
-    public List<SupplierPriceData> getSixMonthData() {
-
-        List<SupplierPriceData> allSuppliersData = new ArrayList<>();
-
-        for (Map.Entry<String, String> entry : sixMonthsDataMap.entrySet()) {
-            allSuppliersData.add(createChartData(entry.getKey(), entry.getValue()));
-        }
-
-        return allSuppliersData;
     }
 }
