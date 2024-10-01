@@ -9,10 +9,11 @@
     <link rel="icon" href="/house.png" type="image/png">
 </head>
 <body>
-<h2 id="tableName">500 Litres of Home Heating Oil</h2>
 
 <div class="container">
-    <div class="table-container">
+    <div id="tableDiv" class="item">
+        <h3 id="tableName">500 Litres of Home Heating Oil</h3>
+
         <table id="dataTable" border="1">
             <thead>
             <tr>
@@ -55,23 +56,21 @@
         </div>
         <p></p>
         <button id="fetchDataBtn">Get latest prices</button>
-
-        <!-- New Chart Container Below Table -->
-        <div id="bottomTableContainer" class="new-chart-container" style="height: 400px;">
-            <div id="weeklyComparisonContainer"></div>
-            <button id="weeklyComparisonButton">Weekly comparison</button>
-        </div>
     </div>
 
-    <div id="charts-container" class="chart-container" style="height: 400px">
+    <div id="fourteenDayDiv" class="item">
         <div id="twoWeekDailyPriceContainer"></div>
         <button id="twoWeekButton">Changes over last 14 days</button>
+    </div>
 
-        <!-- New Chart Container Below Existing Chart -->
-        <div id="bottomChartContainer" class="new-chart-container" style="height: 400px;">
-            <div id="sixMonthsPriceContainer"></div>
-            <button id="sixMonthsButton">Changes over last 6 months</button>
-        </div>
+    <div id="weeklyChangeDiv" class="item">
+        <div id="weeklyComparisonContainer"></div>
+        <button id="weeklyComparisonButton">Weekly comparison</button>
+    </div>
+
+    <div id="sixMonthDiv" class="item">
+        <div id="sixMonthsPriceContainer"></div>
+        <button id="sixMonthsButton">Changes over last 6 months</button>
     </div>
 </div>
 
