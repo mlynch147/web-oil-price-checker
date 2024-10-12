@@ -59,6 +59,7 @@ public class FileWriterService {
         }
     }
 
+    @Async
     public void writeSixMonthDataToFile(final List<Price> prices) {
         try {
             String date = getDateAsString();

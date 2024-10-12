@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Component
 public class FetchPricesScheduler {
@@ -33,14 +32,14 @@ public class FetchPricesScheduler {
         System.out.println("Running daily scheduled task at " + new Date(System.currentTimeMillis()));
 
         List<Price> data = getOilPrices();
-        CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
+        fileWriterService.writePricesToFile(data);
     }
 
     @Scheduled(cron = "0 59 8,12,15 ? * FRI")
     public void executeWeeklyTask() throws Exception {
         System.out.println("Running weekly scheduled task at " + new Date(System.currentTimeMillis()));
         List<Price> data = getOilPrices();
-        CompletableFuture.runAsync(() -> fileWriterService.writeSixMonthDataToFile(data));
+        fileWriterService.writeSixMonthDataToFile(data);
     }
 
     private List<Price> getOilPrices() throws Exception {

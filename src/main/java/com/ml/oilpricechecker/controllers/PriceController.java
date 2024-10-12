@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class PriceController {
@@ -47,7 +46,7 @@ public class PriceController {
          }
 
          if (numberOfLitres == DEFAULT_NUMBER_OF_LITRES) {
-             CompletableFuture.runAsync(() -> fileWriterService.writePricesToFile(data));
+             fileWriterService.writePricesToFile(data);
          }
 
          Collections.sort(data, new PriceComparator());
