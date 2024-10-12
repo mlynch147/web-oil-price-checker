@@ -109,7 +109,11 @@ public final class FileUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
-                System.err.println("Not writing unparsable amount to file");
+                System.err.println("Not writing unparsable amount "
+                        + "[" + newAmount + "] "
+                         + "to file [" + filename + "] "
+                         + "on date "  + newDate);
+                System.err.println(e.getMessage());
             }
         }
     }
