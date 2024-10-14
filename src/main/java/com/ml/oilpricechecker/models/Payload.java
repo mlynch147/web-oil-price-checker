@@ -5,7 +5,7 @@ import org.springframework.util.MultiValueMap;
 
 public class Payload {
 
-    MultiValueMap<String, String> formData;
+    private final MultiValueMap<String, String> formData;
 
     public Payload() {
         formData = new LinkedMultiValueMap<>();
