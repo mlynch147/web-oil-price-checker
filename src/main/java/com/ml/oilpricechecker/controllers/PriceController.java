@@ -45,11 +45,12 @@ public class PriceController {
              data.add(PriceMapper.mapPriceResponseToPrice(priceResponse));
          }
 
+         Collections.sort(data, new PriceComparator());
+
          if (numberOfLitres == DEFAULT_NUMBER_OF_LITRES) {
              fileWriterService.writePricesToFile(data);
          }
 
-         Collections.sort(data, new PriceComparator());
          return data;
      }
 
