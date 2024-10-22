@@ -51,7 +51,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    table-layout: auto; /* Use auto layout for dynamic column width */
+    table-layout: fixed;
 }
 
 th, td {
@@ -64,6 +64,14 @@ th, td {
 th {
     background-color: #f2f2f2;
     font-weight: bold;
+}
+
+.col-50 {
+    width: 50%;
+}
+
+.col-25 {
+    width: 25%;
 }
 
 .radio-buttons-container {
