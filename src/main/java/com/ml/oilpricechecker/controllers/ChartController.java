@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 public class ChartController {
 
-    public static final int DEFAULT_NUMBER_OF_LITRES = 500;
     private final ChartService chartService;
 
     @Autowired
