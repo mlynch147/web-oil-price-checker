@@ -56,7 +56,7 @@ public class PriceController {
 
     private int sanitiseLitres(final String litre) {
 
-        int litres = DEFAULT_NUMBER_OF_LITRES;
+        int litres;
 
         try {
             litres = Integer.parseInt(litre);
