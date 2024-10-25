@@ -5,6 +5,7 @@ import com.ml.oilpricechecker.models.Price;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -43,6 +44,7 @@ public class FileWriterService {
     public void writePricesToFile(final List<Price> prices) {
         try {
             String date = getDateAsString();
+            boolean updateSixMonthFiles = isSixMonthUpdateNeeded();
 
             for (Price price: prices) {
                 FileUtil.writeToFile(getWeeklyFilename(price), date, getPrice(price));
@@ -51,6 +53,10 @@ public class FileWriterService {
                         || price.getSupplierName().equals(CAMPSIE_DISPLAY_NAME)
                         || price.getSupplierName().equals(SCOTTS_DISPLAY_NAME)) {
                     FileUtil.writeToFile(getFourteenDaysFilename(price), date, getPrice(price));
+                }
+
+                if (updateSixMonthFiles) {
+                    FileUtil.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
                 }
             }
         } catch (Exception e) {
@@ -90,9 +96,11 @@ public class FileWriterService {
     }
 
     private String getDateAsString() {
-        LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedDate = today.format(formatter);
-        return formattedDate;
+        return LocalDate.now().format(formatter);
+    }
+
+    private boolean isSixMonthUpdateNeeded() {
+        return LocalDate.now().getDayOfWeek() == DayOfWeek.FRIDAY;
     }
 }
