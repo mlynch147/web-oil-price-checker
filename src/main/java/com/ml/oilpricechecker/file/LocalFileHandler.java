@@ -1,5 +1,7 @@
 package com.ml.oilpricechecker.file;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,22 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public final class FileUtil {
-
-    private FileUtil() {
-    }
+@Component
+public class LocalFileHandler implements IFileHandler {
 
     private static final Object LOCK = new Object();
-    public static final int MAX_CHART_DATA_DAYS = 14;
-    public static final int MAX_WEEKLY_COMPARISON_DAYS = 8;
-    public static final int MAX_SIX_MONTH_ENTRIES = 26;
 
     // External directory path
     private static final String EXTERNAL_BASE_PATH = System.getProperty("user.home")
             + "/Library/Application Support/oilpricechecker/";
 
     // Method to initialize and copy all files from resources to external directory
-    public static void initializeFiles() {
+    @Override
+    public void initializeFiles() {
         synchronized (LOCK) {
             try {
                 // List of filenames in the internal resources
@@ -44,21 +42,9 @@ public final class FileUtil {
         }
     }
 
-    // Method to get the list of filenames from the internal resources directory
-    private static String[] getInternalFilenames() throws IOException {
-        // Assuming files are located in src/main/resources/data/
-        try (InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream("data/");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)))) {
-            // Read all filenames from the input stream
-            return reader.lines().toArray(String[]::new);
-        } catch (NullPointerException e) {
-            System.err.println("Resources directory not found.");
-            return new String[0];
-        }
-    }
-
     // Method to write data to an external file
-    public static void writeToFile(final String filename, final String newDate, final String newAmount) {
+    @Override
+    public void writeToFile(final String filename, final String newDate, final String newAmount) {
         synchronized (LOCK) {
             try {
                 //try and parse the amount before writing...
@@ -118,6 +104,39 @@ public final class FileUtil {
         }
     }
 
+    // Method to get the current content of an external file
+    @Override
+    public List<FileData> getCurrentFileContent(final String filename) {
+        List<FileData> dataList = new ArrayList<>();
+        Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
+
+        try (BufferedReader reader = Files.newBufferedReader(externalFilePath)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] keyValue = line.split("=");
+                dataList.add(new FileData(keyValue[0], keyValue[1]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return dataList;
+    }
+
+    // Method to get the list of filenames from the internal resources directory
+    private static String[] getInternalFilenames() throws IOException {
+        // Assuming files are located in src/main/resources/data/
+        try (InputStream inputStream = LocalFileHandler.class.getClassLoader().getResourceAsStream("data/");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+            // Read all filenames from the input stream
+            return reader.lines().toArray(String[]::new);
+        } catch (NullPointerException e) {
+            System.err.println("Resources directory not found.");
+            return new String[0];
+        }
+    }
+
+
     // Method to copy the internal file from the resources to the external directory
     private static void copyInternalFileToExternal(final String filename) {
         Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
@@ -131,7 +150,7 @@ public final class FileUtil {
             return;  // Exit if unable to create directory
         }
 
-        try (InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream("data/" + filename);
+        try (InputStream inputStream = LocalFileHandler.class.getClassLoader().getResourceAsStream("data/" + filename);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
              BufferedWriter writer = Files.newBufferedWriter(externalFilePath)) {
 
@@ -152,23 +171,5 @@ public final class FileUtil {
             System.err.println("Error copying internal file to external: " + filename);
             e.printStackTrace();
         }
-    }
-
-    // Method to get the current content of an external file
-    public static List<FileData> getCurrentFileContent(final String filename) {
-        List<FileData> dataList = new ArrayList<>();
-        Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
-
-        try (BufferedReader reader = Files.newBufferedReader(externalFilePath)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] keyValue = line.split("=");
-                dataList.add(new FileData(keyValue[0], keyValue[1]));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return dataList;
     }
 }

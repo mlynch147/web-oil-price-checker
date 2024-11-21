@@ -1,7 +1,8 @@
 package com.ml.oilpricechecker.service;
 
-import com.ml.oilpricechecker.file.FileUtil;
+import com.ml.oilpricechecker.file.IFileHandler;
 import com.ml.oilpricechecker.models.Price;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ import static com.ml.oilpricechecker.constants.Constants.*;
 
 @Service
 public class FileWriterService {
+
+    @Autowired
+    private IFileHandler fileHandler;
 
     public static Map<String, String> fourteenDaysDataMap = Map.of(
             CAMPSIE_DISPLAY_NAME, FOURTEEN_DAY_CAMPSIE_FILE_NAME,
@@ -47,16 +51,16 @@ public class FileWriterService {
             boolean updateSixMonthFiles = isSixMonthUpdateNeeded();
 
             for (Price price: prices) {
-                FileUtil.writeToFile(getWeeklyFilename(price), date, getPrice(price));
+                fileHandler.writeToFile(getWeeklyFilename(price), date, getPrice(price));
 
                 if (price.getSupplierName().equals(CRAIGS_DISPLAY_NAME)
                         || price.getSupplierName().equals(CAMPSIE_DISPLAY_NAME)
                         || price.getSupplierName().equals(SCOTTS_DISPLAY_NAME)) {
-                    FileUtil.writeToFile(getFourteenDaysFilename(price), date, getPrice(price));
+                    fileHandler.writeToFile(getFourteenDaysFilename(price), date, getPrice(price));
                 }
 
                 if (updateSixMonthFiles) {
-                    FileUtil.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
+                    fileHandler.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
                 }
             }
         } catch (Exception e) {
@@ -71,7 +75,7 @@ public class FileWriterService {
             String date = getDateAsString();
 
             for (Price price: prices) {
-                FileUtil.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
+                fileHandler.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
             }
         } catch (Exception e) {
             // Handle exception

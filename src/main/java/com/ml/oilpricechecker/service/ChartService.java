@@ -1,10 +1,12 @@
 package com.ml.oilpricechecker.service;
 
 import com.ml.oilpricechecker.file.FileData;
+import com.ml.oilpricechecker.file.IFileHandler;
 import com.ml.oilpricechecker.file.PriceDataPoint;
 import com.ml.oilpricechecker.file.SupplierPriceData;
-import com.ml.oilpricechecker.file.FileUtil;
+import com.ml.oilpricechecker.file.LocalFileHandler;
 import com.ml.oilpricechecker.models.WeeklyComparison;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,6 +20,9 @@ import static com.ml.oilpricechecker.constants.Constants.*;
 
 @Service
 public class ChartService {
+
+    @Autowired
+    IFileHandler fileHandler;
 
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault());
@@ -64,7 +69,7 @@ public class ChartService {
         for (Map.Entry<String, String> entry : weeklyDataMap.entrySet()) {
             String fileName = entry.getKey();
             String displayName = entry.getValue();
-            List<FileData> weeklyData = FileUtil.getCurrentFileContent(fileName);
+            List<FileData> weeklyData = fileHandler.getCurrentFileContent(fileName);
 
             weeklyComparisons.add(new WeeklyComparison(
                     displayName,
@@ -87,7 +92,7 @@ public class ChartService {
 
     private SupplierPriceData createChartData(final String filename, final String displayName) {
 
-        List<FileData> fileData = FileUtil.getCurrentFileContent(filename);
+        List<FileData> fileData = fileHandler.getCurrentFileContent(filename);
 
         List<PriceDataPoint> dataList = new ArrayList<>();
 
