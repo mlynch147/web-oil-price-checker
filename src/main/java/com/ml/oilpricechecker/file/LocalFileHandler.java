@@ -1,5 +1,6 @@
 package com.ml.oilpricechecker.file;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Primary
 @Component
 public class LocalFileHandler implements IFileHandler {
 
@@ -124,9 +126,9 @@ public class LocalFileHandler implements IFileHandler {
     }
 
     // Method to get the list of filenames from the internal resources directory
-    private static String[] getInternalFilenames() throws IOException {
+    private String[] getInternalFilenames() throws IOException {
         // Assuming files are located in src/main/resources/data/
-        try (InputStream inputStream = LocalFileHandler.class.getClassLoader().getResourceAsStream("data/");
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("data/");
              BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)))) {
             // Read all filenames from the input stream
             return reader.lines().toArray(String[]::new);
