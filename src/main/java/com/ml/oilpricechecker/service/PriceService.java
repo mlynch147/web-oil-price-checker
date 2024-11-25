@@ -42,7 +42,7 @@ public class PriceService  {
         List<PriceRequest> priceRequestList = buildPriceRequests(numberOfLitres);
         List<CompletableFuture<PriceResponse>> futures = priceRequestList.stream()
                 .map(this::fetchPriceAsync)
-                .toList();
+                .collect(Collectors.toList());
 
         CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
 
