@@ -29,6 +29,6 @@ public final class PriceMapper {
         float cost = Float.parseFloat(price);
 
         float ppl = (cost / litres) * ONE_HUNDRED;
-        return String.format("  (%.1f ppl)", ppl);
+        return String.format("(%.1f ppl)", ppl);
     }
 }
