@@ -148,9 +148,10 @@ public class S3FileHandler implements IFileHandler {
                             .key(filename)             // S3 object key (file name)
                             .build();
 
-            InputStream inputStream = s3Client.getObject(getObjectRequest);
+            try (InputStream inputStream = s3Client.getObject(getObjectRequest);
+                 BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] keyValue = line.split("=");
