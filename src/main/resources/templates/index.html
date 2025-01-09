@@ -215,7 +215,8 @@
                                     }
                                 },
                                 today: item.todaysPrice,
-                                weekAgo: item.weekOldPrice
+                                weekAgo: item.weekOldPrice,
+                                name: item.supplierName
                             });
                         } else {
                             // For positive/negative differences, color the bars
@@ -223,7 +224,8 @@
                                 y: item.priceDifference,
                                 color: item.priceDifference > 0 ? '#FF9999' : '#90EE90',  // Red for positive, Green for negative
                                 today: item.todaysPrice,
-                                weekAgo: item.weekOldPrice
+                                weekAgo: item.weekOldPrice,
+                                name: item.supplierName
                             });
                         }
                     });
@@ -255,7 +257,7 @@
                         },
                         tooltip: {
                             formatter: function() {
-                                return `<b>${this.x}</b><br/>Today's Price: £${this.point.today.toFixed(2)}<br/>7 Days Ago: £${this.point.weekAgo.toFixed(2)}<br/>Difference: £${this.y.toFixed(2)}`;
+                                return `<b>${this.point.name}</b><br/>Today's Price: £${this.point.today.toFixed(2)}<br/>7 Days Ago: £${this.point.weekAgo.toFixed(2)}<br/>Difference: £${this.y.toFixed(2)}`;
                             }
                         },
                         series: [
