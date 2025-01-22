@@ -71,15 +71,21 @@ public class FileWriterService {
 
     @Async
     public void writeSixMonthDataToFile(final List<Price> prices) {
-        try {
-            String date = getDateAsString();
+        if (isSixMonthUpdateNeeded()) {
+            try {
+                String date = getDateAsString();
 
-            for (Price price: prices) {
-                fileHandler.writeToFile(getSixMonthsFilename(price), date, getPrice(price));
+                for (Price price : prices) {
+                    fileHandler.writeToFile(getSixMonthsFilename(price), date,
+                            getPrice(price));
+                }
+            } catch (Exception e) {
+                // Handle exception
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            // Handle exception
-            e.printStackTrace();
+        } else {
+            System.out.println("Weekly scheduled task was triggered on wrong day: "
+                    + LocalDate.now().getDayOfWeek().toString());
         }
     }
 
