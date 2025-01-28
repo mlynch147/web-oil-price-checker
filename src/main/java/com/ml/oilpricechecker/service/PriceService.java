@@ -9,6 +9,7 @@ import com.ml.oilpricechecker.mappers.mappers.CraigFuelsAmountMapper;
 import com.ml.oilpricechecker.models.Payload;
 import com.ml.oilpricechecker.models.PriceRequest;
 import com.ml.oilpricechecker.models.PriceResponse;
+import com.ml.oilpricechecker.models.builders.PriceRequestBuilder;
 import com.ml.oilpricechecker.util.SSLUtilities;
 
 import java.util.ArrayList;
@@ -143,8 +144,18 @@ public class PriceService  {
         priceRequestList.add(springtownPriceRequest);
         priceRequestList.add(nichollsOilPriceRequest);
 
-        return priceRequestList;
+        PriceRequestBuilder builder = new PriceRequestBuilder();
+        try {
+            List<PriceRequest> priceRequestList2 =
+                    builder.buildPriceRequests(numberOfLitres);
 
+            System.out.println("built using config...");
+            return priceRequestList2;
+        } catch (Exception e) {
+            System.out.println("error building price requests");
+        }
+
+        return priceRequestList;
     }
 
     private CompletableFuture<PriceResponse> fetchPriceAsync(final PriceRequest request) {

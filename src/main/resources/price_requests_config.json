@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Craigs Fuels",
+    "url": "https://www.craigfuels.com/purchase",
+    "pattern": "£(.*?)<",
+    "requestType": "POST",
+    "mediaType": "application/x-www-form-urlencoded",
+    "payload": {
+      "county": "4",
+      "required_quantity": "{numberOfLitres}"
+    },
+    "amountMapper": "CraigsMapper"
+  },
+  {
+    "name": "McGinleys Oils",
+    "url": "https://mcginleysoil.com/",
+    "pattern": "<strong>{numberOfLitres}L</strong>\\s*<p>&pound;([^<]+)</p>",
+    "requestType": "GET"
+  },
+  {
+    "name": "Moores Fuels",
+    "url": "https://www.mooresfuels.com/wp-admin/admin-ajax.php",
+    "pattern": "{numberOfLitres}\":(.*?),",
+    "alternatePattern": "{numberOfLitres}\":(.*?),",
+    "requestType": "POST",
+    "mediaType": "application/x-www-form-urlencoded",
+    "payload": {
+      "action": "delivery_cost",
+      "disPostcode": "BT47",
+      "productId": "4790"
+    }
+  },
+  {
+    "name": "Springtown Fuels",
+    "url": "https://order.springtownfuels.com/api/Quote/GetQuote?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
+    "pattern": "totalIncVat\":(.*?),",
+    "requestType": "GET"
+  },
+  {
+    "name": "Campsie Fuels",
+    "url": "https://campsiefuels.com/api/Quote/GetQuote?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
+    "pattern": "totalPriceIncVat\":(.*?),",
+    "requestType": "GET"
+  },
+  {
+    "name": "Scotts Fuels",
+    "url": "https://order.scottsfuels.com/api/Quote/GetQuote?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
+    "pattern": "totalIncVat\":(.*?),",
+    "requestType": "GET"
+  },
+  {
+    "name": "Nicholls Oils",
+    "url": "https://nicholloils.fuelsoft.co.uk/WEBPLUS/fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
+    "pattern": "TotalGoods\":(.*?),",
+    "requestType": "POST",
+    "mediaType": "application/json"
+  }
+]
