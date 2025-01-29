@@ -7,7 +7,7 @@ import com.ml.oilpricechecker.fetcher.PostPriceFetcher;
 import com.ml.oilpricechecker.fetcher.PriceFetcher;
 import com.ml.oilpricechecker.models.PriceRequest;
 import com.ml.oilpricechecker.models.PriceResponse;
-import com.ml.oilpricechecker.models.builders.PriceRequestBuilder;
+import com.ml.oilpricechecker.models.builders.SupplierConfigBuilder;
 import com.ml.oilpricechecker.util.SSLUtilities;
 
 import java.util.List;
@@ -24,21 +24,21 @@ public class PriceService  {
 
     private final RestTemplate restTemplate;
     private final ExecutorService executorService;
-    private final PriceRequestBuilder priceRequestBuilder;
+    private final SupplierConfigBuilder supplierConfigBuilder;
 
     @Autowired
     public PriceService(final RestTemplate restTemplate,
                         final ExecutorService executorService,
-                        final PriceRequestBuilder priceRequestBuilder) {
+                        final SupplierConfigBuilder supplierConfigBuilder) {
         this.restTemplate = restTemplate;
         this.executorService = executorService;
-        this.priceRequestBuilder = priceRequestBuilder;
+        this.supplierConfigBuilder = supplierConfigBuilder;
     }
 
     public List<PriceResponse> getCurrentPrices(final int numberOfLitres) throws Exception {
         SSLUtilities.disableSSLCertificateChecking();
 
-        List<PriceRequest> priceRequestList = priceRequestBuilder.buildPriceRequests(numberOfLitres);
+        List<PriceRequest> priceRequestList = supplierConfigBuilder.buildPriceRequests(numberOfLitres);
 
         List<CompletableFuture<PriceResponse>> futures = priceRequestList.stream()
                 .map(this::fetchPriceAsync)

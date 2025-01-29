@@ -1,7 +1,7 @@
 package com.ml.oilpricechecker;
 
 import com.ml.oilpricechecker.file.IFileHandler;
-import com.ml.oilpricechecker.models.builders.PriceRequestBuilder;
+import com.ml.oilpricechecker.models.builders.SupplierConfigBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +18,7 @@ public class OilpricecheckerApplication implements CommandLineRunner {
     private IFileHandler fileHandler;
 
     @Autowired
-    private PriceRequestBuilder priceRequestBuilder;
+    private SupplierConfigBuilder priceRequestBuilder;
 
     public static void main(final String[] args) {
         SpringApplication.run(OilpricecheckerApplication.class, args);

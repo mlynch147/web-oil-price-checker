@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class PriceRequestBuilder {
+public class SupplierConfigBuilder {
 
     private static final String CONFIG_FILE = "src/main/resources/price_requests_config.json";
     private static final int ONE_THOUSAND = 1000;
