@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PriceService  {
 
-    public static final int ONE_THOUSAND = 1000;
     private final RestTemplate restTemplate;
     private final ExecutorService executorService;
     private final PriceRequestBuilder priceRequestBuilder;
