@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class PriceRequestBuilder {
 
     private static final String CONFIG_FILE = "src/main/resources/price_requests_config.json";
+    private static final int ONE_THOUSAND = 1000;
 
     public List<PriceRequest> buildPriceRequests(final int numberOfLitres) throws Exception {
         // Parse the configuration file
@@ -41,6 +42,11 @@ public class PriceRequestBuilder {
 
             Pattern pattern = Pattern.compile(
                     config.getPattern().replace("{numberOfLitres}", String.valueOf(numberOfLitres)));
+
+            if (config.getAlternatePattern() != null && numberOfLitres == ONE_THOUSAND) {
+                pattern = Pattern.compile(
+                        config.getAlternatePattern().replace("{numberOfLitres}", String.valueOf(numberOfLitres)));
+            }
 
             PriceRequest priceRequest = new PriceRequest(
                     config.getName(),

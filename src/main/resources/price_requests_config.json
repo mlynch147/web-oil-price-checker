@@ -21,7 +21,7 @@
     "name": "Moores Fuels",
     "url": "https://www.mooresfuels.com/wp-admin/admin-ajax.php",
     "pattern": "{numberOfLitres}\":(.*?),",
-    "alternatePattern": "{numberOfLitres}\":(.*?),",
+    "alternatePattern": "{numberOfLitres}\":(.*?)\\}",
     "requestType": "POST",
     "mediaType": "application/x-www-form-urlencoded",
     "payload": {
