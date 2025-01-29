@@ -2,8 +2,9 @@ package com.ml.oilpricechecker.config;
 
 import java.util.Map;
 
-public class PriceRequestConfig {
-    private String name;
+public class SupplierConfig {
+    private String displayName;
+    private String fileName;
     private String url;
     private String pattern;
     private String alternatePattern;
@@ -12,13 +13,17 @@ public class PriceRequestConfig {
     private Map<String, String> payload;
     private String amountMapper;
 
-    // Getters and setters...
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
-
-    public void setName(final String name) {
-        this.name = name;
+    public void setDisplayName(final String displayName) {
+        this.displayName = displayName;
+    }
+    public String getFileName() {
+        return fileName;
+    }
+    public void setFileName(final String fileName) {
+        this.fileName = fileName;
     }
     public String getUrl() {
         return url;
@@ -61,7 +66,7 @@ public class PriceRequestConfig {
         return amountMapper;
     }
 
-    public void setAmountMapper(String amountMapper) {
+    public void setAmountMapper(final String amountMapper) {
         this.amountMapper = amountMapper;
     }
 }

@@ -27,35 +27,11 @@ public class ChartService {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault());
 
-    public static Map<String, String> fourteenDayDataMap = Map.of(
-            FOURTEEN_DAY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
-            FOURTEEN_DAY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
-            FOURTEEN_DAY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME);
-
-    public static Map<String, String> weeklyDataMap = Map.of(
-            WEEKLY_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
-            WEEKLY_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
-            WEEKLY_MCGINLEY_FILE_NAME, MCGINLEY_DISPLAY_NAME,
-            WEEKLY_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
-            WEEKLY_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
-            WEEKLY_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
-            WEEKLY_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME);
-
-    public static Map<String, String> sixMonthsDataMap = Map.of(
-            SIX_MONTHS_CAMPSIE_FILE_NAME, CAMPSIE_DISPLAY_NAME,
-            SIX_MONTHS_CRAIGS_FILE_NAME, CRAIGS_DISPLAY_NAME,
-            SIX_MONTHS_MCGINLEY_FILE_NAME, MCGINLEY_DISPLAY_NAME,
-            SIX_MONTHS_MOORES_FILE_NAME, MOORES_DISPLAY_NAME,
-            SIX_MONTHS_SCOTTS_FILE_NAME, SCOTTS_DISPLAY_NAME,
-            SIX_MONTHS_NICHOLLS_FILE_NAME, NICHOLLS_DISPLAY_NAME,
-            SIX_MONTHS_SPRINGTOWN_FILE_NAME, SPRINGTOWN_DISPLAY_NAME);
-
-
     public List<SupplierPriceData> getChartData() {
 
         List<SupplierPriceData> suppliersData = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : fourteenDayDataMap.entrySet()) {
+        for (Map.Entry<String, String> entry : fourteenDaysFileNameMap.entrySet()) {
             suppliersData.add(createChartData(entry.getKey(), entry.getValue()));
         }
 
@@ -66,7 +42,7 @@ public class ChartService {
 
         List<WeeklyComparison> weeklyComparisons = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : weeklyDataMap.entrySet()) {
+        for (Map.Entry<String, String> entry : weeklyFileNameMap.entrySet()) {
             String fileName = entry.getKey();
             String displayName = entry.getValue();
             List<FileData> weeklyData = fileHandler.getCurrentFileContent(fileName);
@@ -83,7 +59,7 @@ public class ChartService {
 
         List<SupplierPriceData> allSuppliersData = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : sixMonthsDataMap.entrySet()) {
+        for (Map.Entry<String, String> entry : sixMonthsFileNameMap.entrySet()) {
             allSuppliersData.add(createChartData(entry.getKey(), entry.getValue()));
         }
 

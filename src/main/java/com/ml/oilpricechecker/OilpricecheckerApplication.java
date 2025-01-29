@@ -30,6 +30,6 @@ public class OilpricecheckerApplication implements CommandLineRunner {
         // Call the method from the injected FileHandler
         fileHandler.initializeFiles();
 
-        priceRequestBuilder.initPriceRequestConfig();
+        priceRequestBuilder.loadSupplierConfig();
     }
 }

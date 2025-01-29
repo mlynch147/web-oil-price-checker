@@ -1,6 +1,7 @@
 [
   {
-    "name": "Craigs Fuels",
+    "displayName": "Craigs Fuels",
+    "fileName": "craigs.txt",
     "url": "https://www.craigfuels.com/purchase",
     "pattern": "£(.*?)<",
     "requestType": "POST",
@@ -12,13 +13,15 @@
     "amountMapper": "CraigsMapper"
   },
   {
-    "name": "McGinleys Oils",
+    "displayName": "McGinleys Oils",
+    "fileName": "mcginleys.txt",
     "url": "https://mcginleysoil.com/",
     "pattern": "<strong>{numberOfLitres}L</strong>\\s*<p>&pound;([^<]+)</p>",
     "requestType": "GET"
   },
   {
-    "name": "Moores Fuels",
+    "displayName": "Moores Fuels",
+    "fileName": "moores.txt",
     "url": "https://www.mooresfuels.com/wp-admin/admin-ajax.php",
     "pattern": "{numberOfLitres}\":(.*?),",
     "alternatePattern": "{numberOfLitres}\":(.*?)\\}",
@@ -31,25 +34,29 @@
     }
   },
   {
-    "name": "Springtown Fuels",
+    "displayName": "Springtown Fuels",
+    "fileName": "springtown.txt",
     "url": "https://order.springtownfuels.com/api/Quote/GetQuote?brandId=1&customerTypeId=1&statedUse=1&productCode=K&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
     "pattern": "totalIncVat\":(.*?),",
     "requestType": "GET"
   },
   {
-    "name": "Campsie Fuels",
+    "displayName": "Campsie Fuels",
+    "fileName": "campsie.txt",
     "url": "https://campsiefuels.com/api/Quote/GetQuote?brandId=7&customerTypeId=1&productCode=k&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
     "pattern": "totalPriceIncVat\":(.*?),",
     "requestType": "GET"
   },
   {
-    "name": "Scotts Fuels",
+    "displayName": "Scotts Fuels",
+    "fileName": "scotts.txt",
     "url": "https://order.scottsfuels.com/api/Quote/GetQuote?brandId=1&customerTypeId=6&statedUse=1&productCode=K&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
     "pattern": "totalIncVat\":(.*?),",
     "requestType": "GET"
   },
   {
-    "name": "Nicholls Oils",
+    "displayName": "Nicholls Oils",
+    "fileName": "nichollOils.txt",
     "url": "https://nicholloils.fuelsoft.co.uk/WEBPLUS/fuelsoftapi/383cea92-b212-4fff-890c-8826ba380ba1?url=Quotes/A01",
     "pattern": "TotalGoods\":(.*?),",
     "requestType": "POST",
