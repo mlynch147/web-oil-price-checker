@@ -8,27 +8,33 @@ import com.ml.oilpricechecker.mappers.mappers.AmountOfLitresMapper;
 import com.ml.oilpricechecker.models.Payload;
 import com.ml.oilpricechecker.models.PriceRequest;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Component
 public class PriceRequestBuilder {
 
     private static final String CONFIG_FILE = "src/main/resources/price_requests_config.json";
     private static final int ONE_THOUSAND = 1000;
 
-    public List<PriceRequest> buildPriceRequests(final int numberOfLitres) throws Exception {
-        // Parse the configuration file
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<PriceRequestConfig> configs = objectMapper.readValue(
-                new File(CONFIG_FILE), new TypeReference<>() { });
+    public List<PriceRequestConfig> priceRequestsConfig;
 
+    public void initPriceRequestConfig() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        priceRequestsConfig = objectMapper.readValue(
+                new File(CONFIG_FILE), new TypeReference<>() { });
+    }
+
+    public List<PriceRequest> buildPriceRequests(final int numberOfLitres) throws Exception {
         List<PriceRequest> priceRequestList = new ArrayList<>();
 
         // Build PriceRequest objects from configurations
-        for (PriceRequestConfig config : configs) {
+        for (PriceRequestConfig config : priceRequestsConfig) {
             String mappedLitres = AmountOfLitresMapper.mapAmountOfLitres(config.getAmountMapper(), numberOfLitres);
 
             Payload payload = null;
