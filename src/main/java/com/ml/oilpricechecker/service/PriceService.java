@@ -4,6 +4,7 @@ import com.ml.oilpricechecker.enums.RequestType;
 
 import com.ml.oilpricechecker.fetcher.GetPriceFetcher;
 import com.ml.oilpricechecker.fetcher.PostPriceFetcher;
+import com.ml.oilpricechecker.fetcher.PriceFetcher;
 import com.ml.oilpricechecker.models.PriceRequest;
 import com.ml.oilpricechecker.models.PriceResponse;
 import com.ml.oilpricechecker.models.builders.PriceRequestBuilder;
@@ -54,7 +55,7 @@ public class PriceService  {
 
 
     private CompletableFuture<PriceResponse> fetchPriceAsync(final PriceRequest request) {
-        com.ml.oilpricechecker.fetcher.PriceFetcher fetcher = request.getRequestType() == RequestType.GET
+        PriceFetcher fetcher = request.getRequestType() == RequestType.GET
                 ? new GetPriceFetcher(restTemplate) : new PostPriceFetcher(restTemplate);
 
         return CompletableFuture.supplyAsync(() -> fetcher.fetchPrice(request), executorService);
