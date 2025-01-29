@@ -61,5 +61,12 @@
     "pattern": "TotalGoods\":(.*?),",
     "requestType": "POST",
     "mediaType": "application/json"
+  },
+  {
+    "displayName": "Bellarena Fuels",
+    "fileName": "bellarena.txt",
+    "url": "https://order.bellarenafuels.co.uk/api/Quote/GetQuote?brandId=1&customerTypeId=3&statedUse=1&productCode=K&postcode=BT474BN&quantity={numberOfLitres}&maxSpend=0",
+    "pattern": "totalIncVat\":(.*?),",
+    "requestType": "GET"
   }
 ]

@@ -112,13 +112,25 @@ public class LocalFileHandler implements IFileHandler {
         List<FileData> dataList = new ArrayList<>();
         Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
 
+        if (!Files.exists(externalFilePath) && isValidFileName(filename)) {
+            try {
+                // File doesn't exist, so let's create it
+                Files.createFile(externalFilePath);
+                System.out.println("File created: " + externalFilePath);
+            } catch (IOException e) {
+                System.err.println("Failed to create the file: " + e.getMessage());
+                return dataList;  // Returning an empty list if file creation fails
+            }
+        }
+
         try (BufferedReader reader = Files.newBufferedReader(externalFilePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] keyValue = line.split("=");
                 dataList.add(new FileData(keyValue[0], keyValue[1]));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -173,5 +185,11 @@ public class LocalFileHandler implements IFileHandler {
             System.err.println("Error copying internal file to external: " + filename);
             e.printStackTrace();
         }
+    }
+
+    //TODO - build some rules...
+    private boolean isValidFileName(final String filename) {
+        //for now return true...
+        return true;
     }
 }
