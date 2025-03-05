@@ -161,7 +161,25 @@ public class S3FileHandler implements IFileHandler {
                 }
             }
         } catch (NoSuchKeyException e) {
-            System.err.println("File not found in S3 bucket: " + filename);
+            // File doesn't exist, so we need to create it in S3
+            System.out.println("File not found in S3 bucket: " + filename);
+
+            try {
+                // Create an empty file or add default content and upload it to S3
+                String defaultContent = ""; // Empty content or default configuration
+                byte[] content = defaultContent.getBytes(StandardCharsets.UTF_8);
+
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(filename)
+                        .build();
+
+                s3Client.putObject(putObjectRequest, RequestBody.fromBytes(content));
+                System.out.println("New file created in S3: " + filename);
+            } catch (Exception creationException) {
+                System.err.println("Error creating file in S3: " + creationException.getMessage());
+            }
+
         } catch (IOException e) {
             System.err.println("Error reading file from S3: " + filename);
             e.printStackTrace();
