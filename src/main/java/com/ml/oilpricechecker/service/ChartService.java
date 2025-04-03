@@ -117,6 +117,8 @@ public class ChartService {
 
             LocalDate expectedNextDate = currentDate.plusDays(1);
             while (expectedNextDate.isBefore(nextDate)) {
+
+                //TODO - get a bit cleverer with calculating the amount....
                 fileDataList.add(i + 1, new FileData(expectedNextDate.format(DATE_FORMATTER), current.getAmount()));
                 expectedNextDate = expectedNextDate.plusDays(1);
                 i++; // Move forward for each inserted element
