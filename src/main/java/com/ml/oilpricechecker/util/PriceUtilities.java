@@ -17,6 +17,12 @@ public final class PriceUtilities {
             String extractedText = "£" + matcher.group(1);
             if (!extractedText.contains(".")) {
                 extractedText += ".00";
+            } else {
+                int indexOfDecimal = extractedText.indexOf(".");
+                String pennies = extractedText.substring(indexOfDecimal + 1);
+                if (pennies.length() == 1) {
+                    extractedText += "0";
+                }
             }
             return extractedText;
         }
