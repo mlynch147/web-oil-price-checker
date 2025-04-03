@@ -187,6 +187,11 @@ public class S3FileHandler implements IFileHandler {
         return dataList;
     }
 
+    @Override
+    public void rewriteFile(final String filename, final List<FileData> fileData) {
+        // shouldnt have to do this here...
+    }
+
     // Method to get the list of filenames from the internal resources directory
     private String[] getInternalFilenames() throws IOException {
         // Assuming files are located in src/main/resources/data/

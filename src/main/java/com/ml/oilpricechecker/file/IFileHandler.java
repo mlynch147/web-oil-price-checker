@@ -16,4 +16,6 @@ public interface IFileHandler {
 
     // Method to get the current content of an external file
     List<FileData> getCurrentFileContent(String filename);
+
+    void rewriteFile(String filename, List<FileData> fileData);
 }

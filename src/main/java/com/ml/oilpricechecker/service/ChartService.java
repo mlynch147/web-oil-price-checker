@@ -48,11 +48,15 @@ public class ChartService {
 
             if (hasGapsInData(weeklyData)) {
                 fillGapsInData(weeklyData);
+
+                if (weeklyData.size() > IFileHandler.MAX_WEEKLY_COMPARISON_DAYS) {
+                    weeklyData = weeklyData.subList(
+                            weeklyData.size() - IFileHandler.MAX_WEEKLY_COMPARISON_DAYS, weeklyData.size());
+
+                    fileHandler.rewriteFile(fileName, weeklyData);
+                }
             }
-            if (weeklyData.size() > IFileHandler.MAX_WEEKLY_COMPARISON_DAYS) {
-                weeklyData = weeklyData.subList(
-                        weeklyData.size() - IFileHandler.MAX_WEEKLY_COMPARISON_DAYS, weeklyData.size());
-            }
+
 
             weeklyComparisons.add(new WeeklyComparison(
                     displayName,
@@ -79,10 +83,14 @@ public class ChartService {
 
         if (fillGaps && hasGapsInData(fileData)) {
             fillGapsInData(fileData);
-        }
-        if (fileData.size() > IFileHandler.MAX_CHART_DATA_DAYS) {
-            fileData = fileData.subList(
-                    fileData.size() - IFileHandler.MAX_CHART_DATA_DAYS, fileData.size());
+
+            if (fileData.size() > IFileHandler.MAX_CHART_DATA_DAYS) {
+                fileData = fileData.subList(
+                        fileData.size() - IFileHandler.MAX_CHART_DATA_DAYS,
+                        fileData.size());
+
+                fileHandler.rewriteFile(filename, fileData);
+            }
         }
 
         List<PriceDataPoint> dataList = new ArrayList<>();

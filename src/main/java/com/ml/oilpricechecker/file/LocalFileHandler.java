@@ -129,12 +129,31 @@ public class LocalFileHandler implements IFileHandler {
                 String[] keyValue = line.split("=");
                 dataList.add(new FileData(keyValue[0], keyValue[1]));
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         return dataList;
+    }
+
+    @Override
+    public void rewriteFile(final String filename, final List<FileData> fileData) {
+        synchronized (LOCK) {
+            try {
+                Path externalFilePath = Paths.get(EXTERNAL_BASE_PATH, filename);
+
+                // Write the updated data to the external file
+                try (BufferedWriter writer = Files.newBufferedWriter(externalFilePath)) {
+                    for (FileData data : fileData) {
+                        String line = data.getDate() + "=" + data.getAmount();
+                        writer.write(line);
+                        writer.newLine();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // Method to get the list of filenames from the internal resources directory
