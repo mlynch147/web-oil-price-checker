@@ -8,6 +8,7 @@ import com.ml.oilpricechecker.util.PriceUtilities;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -38,19 +39,7 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
     }
 
     private HttpEntity<Object> createRequestEntity(final PriceRequest request) throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(request.getMediaType());
-
-        headers.set("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-                        "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
-
-        headers.set("Accept",
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-
-        headers.set("Accept-Language", "en-GB,en;q=0.9");
-        headers.remove("Accept-Encoding");
-
+        HttpHeaders headers = getHttpHeaders(request);
 
         if (request.getMediaType().equals(MediaType.APPLICATION_JSON)) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -60,6 +49,23 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
         } else {
             return new HttpEntity<>(request.getPayload().getFormData(), headers);
         }
+    }
+
+    @NonNull
+    private static HttpHeaders getHttpHeaders(final PriceRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(request.getMediaType());
+
+        headers.set("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
+
+        headers.set("Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+
+        headers.set("Accept-Language", "en-GB,en;q=0.9");
+       // headers.remove("Accept-Encoding");
+        return headers;
     }
 
 }
