@@ -23,9 +23,6 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
     public PriceResponse fetchPrice(final PriceRequest request) {
         String extractedText = "N/A";
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(request.getMediaType());
-
             HttpEntity<Object> requestEntity = createRequestEntity(request);
             String htmlContent = restTemplate.postForObject(request.getUrl(), requestEntity, String.class);
 
@@ -64,7 +61,8 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
 
         headers.set("Accept-Language", "en-GB,en;q=0.9");
-       // headers.remove("Accept-Encoding");
+
+        headers.remove("Accept-Encoding");
         return headers;
     }
 
