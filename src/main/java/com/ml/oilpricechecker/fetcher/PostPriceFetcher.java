@@ -41,6 +41,17 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(request.getMediaType());
 
+        headers.set("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                        "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
+
+        headers.set("Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+
+        headers.set("Accept-Language", "en-GB,en;q=0.9");
+        headers.remove("Accept-Encoding");
+
+
         if (request.getMediaType().equals(MediaType.APPLICATION_JSON)) {
             ObjectMapper objectMapper = new ObjectMapper();
             String postData = objectMapper.writeValueAsString(

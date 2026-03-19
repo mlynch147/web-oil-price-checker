@@ -11,15 +11,14 @@ public class PriceComparator implements Comparator<Price> {
         double p1 = parsePrice(price1.getPrice());
         double p2 = parsePrice(price2.getPrice());
 
-        if (p1 != Double.NaN && p2 != Double.NaN) {
+        if (!Double.isNaN(p1) && !Double.isNaN(p2)) {
             int priceComparison = Double.compare(p1, p2);
             if (priceComparison != 0) {
                 return priceComparison;
             }
-            return price1.getSupplierName().compareTo(price2.getSupplierName());
-        } else if (p1 != Double.NaN) {
+        } else if (!Double.isNaN(p1)) {
             return -1;
-        } else if (p2 != Double.NaN) {
+        } else if (!Double.isNaN(p2)) {
             return 1;
         }
         return price1.getSupplierName().compareTo(price2.getSupplierName());
@@ -32,5 +31,4 @@ public class PriceComparator implements Comparator<Price> {
             return Double.NaN;
         }
     }
-
 }
