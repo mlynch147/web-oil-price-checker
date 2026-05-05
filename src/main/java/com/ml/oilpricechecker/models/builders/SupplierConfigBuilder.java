@@ -34,20 +34,20 @@ public class SupplierConfigBuilder {
             String displayName = supplierConfig.getDisplayName();
             String fileName = supplierConfig.getFileName();
 
-            if (supplierConfig.getDisplayName().contains("Craigs")
-                    || supplierConfig.getDisplayName().contains("Campsie")
-                    || supplierConfig.getDisplayName().contains("Scotts")) {
+            if (displayName.contains("Craigs")
+                    || displayName.contains("Campsie")
+                    || displayName.contains("Scotts")) {
                 Constants.fourteenDaysFileNameMap.put(fileName, displayName);
                 Constants.fourteenDaysDisplayNameMap.put(displayName, fileName);
 
-                if (supplierConfig.getDisplayName().contains("Craigs")) {
-                    Constants.CRAIGS_DISPLAY_NAME = supplierConfig.getDisplayName();
+                if (displayName.contains("Craigs")) {
+                    Constants.craigsDisplayName = displayName;
                 }
-                if (supplierConfig.getDisplayName().contains("Campsie")) {
-                    Constants.CAMPSIE_DISPLAY_NAME = supplierConfig.getDisplayName();
+                if (displayName.contains("Campsie")) {
+                    Constants.campsieDisplayName = displayName;
                 }
-                if (supplierConfig.getDisplayName().contains("Scotts")) {
-                    Constants.SCOTTS_DISPLAY_NAME = supplierConfig.getDisplayName();
+                if (displayName.contains("Scotts")) {
+                    Constants.scottsDisplayName = displayName;
                 }
             }
 

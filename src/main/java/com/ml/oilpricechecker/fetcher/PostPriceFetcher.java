@@ -36,7 +36,7 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
     }
 
     private HttpEntity<Object> createRequestEntity(final PriceRequest request) throws Exception {
-        HttpHeaders headers = getHttpHeaders(request);
+        HttpHeaders headers = buildHttpHeaders(request);
 
         if (request.getMediaType().equals(MediaType.APPLICATION_JSON)) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -49,7 +49,7 @@ public class PostPriceFetcher extends AbstractPriceFetcher {
     }
 
     @NonNull
-    private static HttpHeaders getHttpHeaders(final PriceRequest request) {
+    private static HttpHeaders buildHttpHeaders(final PriceRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(request.getMediaType());
 

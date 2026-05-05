@@ -28,9 +28,9 @@ public class FileWriterService {
             for (Price price: prices) {
                 fileHandler.writeToFile(getWeeklyFilename(price), date, getPrice(price));
 
-                if (price.getSupplierName().equals(CRAIGS_DISPLAY_NAME)
-                        || price.getSupplierName().equals(CAMPSIE_DISPLAY_NAME)
-                        || price.getSupplierName().equals(SCOTTS_DISPLAY_NAME)) {
+                if (price.getSupplierName().equals(craigsDisplayName)
+                        || price.getSupplierName().equals(campsieDisplayName)
+                        || price.getSupplierName().equals(scottsDisplayName)) {
                     fileHandler.writeToFile(getFourteenDaysFilename(price), date, getPrice(price));
                 }
 

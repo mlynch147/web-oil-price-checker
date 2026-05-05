@@ -16,7 +16,7 @@ public final class Constants {
     public static Map<String, String> weeklyFileNameMap = new HashMap<>();
     public static Map<String, String> sixMonthsFileNameMap = new HashMap<>();
 
-    public static String CRAIGS_DISPLAY_NAME = "Craigs Fuels";
-    public static String CAMPSIE_DISPLAY_NAME = "Campsie Fuels";
-    public static String SCOTTS_DISPLAY_NAME = "McGinleys Oils";
+    public static String craigsDisplayName;
+    public static String campsieDisplayName;
+    public static String scottsDisplayName;
 }
