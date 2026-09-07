@@ -134,6 +134,25 @@
                     </div>
                 </section>
 
+                <section class="card card--wide" aria-labelledby="bulkTitle">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__title" id="bulkTitle">Bulk discount curve</h2>
+                            <p class="card__subtitle">Pence per litre against order volume — lower is better value</p>
+                        </div>
+                        <button type="button" id="bulkBtn" class="btn btn--subtle btn--sm">
+                            <span class="btn__spinner" aria-hidden="true"></span>
+                            Build curve
+                        </button>
+                    </div>
+                    <div class="card__body card__body--flush">
+                        <div id="bulkChart" class="chart chart--tall"></div>
+                        <p class="chart-status" id="bulkStatus" data-state="idle" role="status">
+                            Queries every supplier at 100–1000 litres to find the best value order size. Takes a few seconds.
+                        </p>
+                    </div>
+                </section>
+
                 <section class="card" aria-labelledby="weeklyTitle">
                     <div class="card__header">
                         <div>

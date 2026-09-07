@@ -393,6 +393,96 @@
             });
     }
 
+    function loadBulkDiscount() {
+        var button = $('#bulkBtn');
+        setLoading(button, true);
+        setStatus($('#bulkStatus'), 'Querying every supplier at 100–1000 litres…', 'loading');
+
+        return getJson('/bulk-discount')
+            .then(function (response) {
+                var series = response.map(function (supplier) {
+                    return {
+                        name: supplier.supplierName,
+                        data: supplier.points.map(function (point) {
+                            return {
+                                x: point.numberOfLitres,
+                                y: Math.round(point.pencePerLitre * 10) / 10,
+                                cost: point.cost
+                            };
+                        })
+                    };
+                });
+
+                Highcharts.chart('bulkChart', {
+                    chart: { type: 'line' },
+                    xAxis: {
+                        title: { text: 'Order volume (litres)' },
+                        tickInterval: 100,
+                        labels: { format: '{value}L' }
+                    },
+                    yAxis: { title: { text: 'Pence per litre' } },
+                    plotOptions: {
+                        line: { marker: { enabled: true, symbol: 'circle', radius: 3 }, lineWidth: 2 },
+                        series: { states: { inactive: { opacity: 0.25 } } }
+                    },
+                    tooltip: {
+                        pointFormatter: function () {
+                            return '<span style="color:' + this.series.color + '">\u25CF</span> '
+                                + this.series.name + ': <b>' + this.y.toFixed(1) + ' ppl</b><br/>'
+                                + this.x + ' litres for ' + formatCurrency(this.cost) + '<br/>';
+                        }
+                    },
+                    series: series
+                });
+
+                setStatus($('#bulkStatus'), summariseBulkCurve(response), 'idle');
+            })
+            .catch(function (error) {
+                setStatus($('#bulkStatus'), 'Could not build the curve. ' + error.message, 'error');
+                toast('Failed to build the bulk discount curve.', true);
+            })
+            .finally(function () {
+                setLoading(button, false);
+            });
+    }
+
+    /** Turns the curve into a plain-English "best value" sentence. */
+    function summariseBulkCurve(response) {
+        var best = null;
+
+        response.forEach(function (supplier) {
+            supplier.points.forEach(function (point) {
+                if (!best || point.pencePerLitre < best.pencePerLitre) {
+                    best = {
+                        supplierName: supplier.supplierName,
+                        litres: point.numberOfLitres,
+                        cost: point.cost,
+                        pencePerLitre: point.pencePerLitre
+                    };
+                }
+            });
+        });
+
+        if (!best) {
+            return 'No supplier returned prices for these volumes.';
+        }
+
+        var summary = 'Best value: ' + best.supplierName + ' at ' + best.litres + ' litres — '
+            + best.pencePerLitre.toFixed(1) + ' ppl (' + formatCurrency(best.cost) + ').';
+
+        // Compare against the same supplier's smallest order to show the discount.
+        var supplier = response.find(function (s) { return s.supplierName === best.supplierName; });
+        var smallest = supplier && supplier.points.length ? supplier.points[0] : null;
+
+        if (smallest && smallest.numberOfLitres !== best.litres) {
+            var saving = smallest.pencePerLitre - best.pencePerLitre;
+            summary += ' That is ' + saving.toFixed(1) + ' ppl cheaper than their '
+                + smallest.numberOfLitres + ' litre price.';
+        }
+
+        return summary;
+    }
+
     // ------------------------------------------------------------------ init
 
     function bind() {
@@ -400,6 +490,7 @@
         $('#twoWeekBtn').addEventListener('click', loadFourteenDay);
         $('#weeklyBtn').addEventListener('click', loadWeeklyComparison);
         $('#sixMonthBtn').addEventListener('click', loadSixMonths);
+        $('#bulkBtn').addEventListener('click', loadBulkDiscount);
 
         $('#refreshAllBtn').addEventListener('click', function () {
             loadPrices();
