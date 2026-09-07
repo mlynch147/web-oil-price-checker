@@ -8,7 +8,12 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "index"; // This will map to src/main/resources/templates/index.html
+        return "dashboard"; // This will map to src/main/resources/templates/dashboard.html
+    }
+
+    @GetMapping("/v1")
+    public String legacyHome() {
+        return "index"; // Legacy UI: src/main/resources/templates/index.html
     }
 
 }

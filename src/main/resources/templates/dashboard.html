@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024">
+    <title>Oil Price Dashboard | BT47/48</title>
+    <link rel="icon" href="/house.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/oil-dashboard.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="/js/oil-dashboard.js" defer></script>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="app-header__inner">
+        <div class="brand">
+            <span class="brand__mark"><img src="/house.png" alt=""></span>
+            <div>
+                <h1 class="brand__title">Home Heating Oil Dashboard</h1>
+                <p class="brand__subtitle">Live supplier pricing and trends for the BT47 / BT48 area</p>
+            </div>
+        </div>
+        <div class="header-meta">
+            <div class="header-meta__stamp">
+                Prices last updated
+                <strong id="lastUpdated">Not yet loaded</strong>
+            </div>
+            <button type="button" id="refreshAllBtn" class="btn btn--ghost">
+                <span class="btn__spinner" aria-hidden="true"></span>
+                Refresh all
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="app-main">
+    <div class="layout">
+
+        <!-- ------------------------------ Left column ------------------------------ -->
+        <section class="card" aria-labelledby="priceTableTitle">
+            <div class="card__header">
+                <div>
+                    <h2 class="card__title" id="priceTableTitle">Supplier price comparison</h2>
+                    <p class="card__subtitle" id="volumeHeading">500 litres of home heating oil</p>
+                </div>
+                <span class="badge badge--info">Cheapest first</span>
+            </div>
+
+            <div class="card__body card__body--flush">
+                <div class="table-wrap">
+                    <table class="price-table">
+                        <caption class="visually-hidden">Cost per supplier for the selected volume of home heating oil</caption>
+                        <colgroup>
+                            <col style="width: 50%">
+                            <col style="width: 25%">
+                            <col style="width: 25%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">Supplier</th>
+                            <th scope="col" class="num">Cost</th>
+                            <th scope="col" class="num">Per litre</th>
+                        </tr>
+                        </thead>
+                        <tbody id="priceTableBody">
+                        <!-- Populated by oil-dashboard.js -->
+                        </tbody>
+                    </table>
+                </div>
+                <p class="chart-status" id="tableStatus" data-state="idle" role="status">
+                    Choose a volume and fetch the latest prices.
+                </p>
+            </div>
+
+            <div class="card__footer">
+                <span class="field-label" id="volumeLabel">Order volume (litres)</span>
+                <div class="volume-options" role="radiogroup" aria-labelledby="volumeLabel">
+                    <label class="volume-option"><input type="radio" name="litre" value="100"><span>100</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="200"><span>200</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="300"><span>300</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="400"><span>400</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="500" checked><span>500</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="600"><span>600</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="700"><span>700</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="800"><span>800</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="900"><span>900</span></label>
+                    <label class="volume-option"><input type="radio" name="litre" value="1000"><span>1000</span></label>
+                </div>
+                <button type="button" id="fetchPricesBtn" class="btn btn--primary btn--block">
+                    <span class="btn__spinner" aria-hidden="true"></span>
+                    Get latest prices
+                </button>
+            </div>
+        </section>
+
+        <!-- ----------------------------- Right column ----------------------------- -->
+        <div>
+            <div class="stat-grid">
+                <article class="card stat stat--best">
+                    <span class="stat__label">Cheapest today</span>
+                    <span class="stat__value" id="statBestValue">—</span>
+                    <span class="stat__meta" id="statBestMeta">Fetch prices to compare suppliers</span>
+                </article>
+                <article class="card stat">
+                    <span class="stat__label">Price spread</span>
+                    <span class="stat__value" id="statSpreadValue">—</span>
+                    <span class="stat__meta" id="statSpreadMeta">Potential saving by shopping around</span>
+                </article>
+                <article class="card stat">
+                    <span class="stat__label">Market average</span>
+                    <span class="stat__value" id="statAverageValue">—</span>
+                    <span class="stat__meta" id="statAverageMeta">Across all responding suppliers</span>
+                </article>
+            </div>
+
+            <div class="chart-grid">
+                <section class="card card--wide" aria-labelledby="twoWeekTitle">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__title" id="twoWeekTitle">Two week trend</h2>
+                            <p class="card__subtitle">Daily cost for 500 litres</p>
+                        </div>
+                        <button type="button" id="twoWeekBtn" class="btn btn--subtle btn--sm">
+                            <span class="btn__spinner" aria-hidden="true"></span>
+                            Reload
+                        </button>
+                    </div>
+                    <div class="card__body card__body--flush">
+                        <div id="twoWeekChart" class="chart chart--tall"></div>
+                        <p class="chart-status" id="twoWeekStatus" data-state="idle" role="status">Loading…</p>
+                    </div>
+                </section>
+
+                <section class="card" aria-labelledby="weeklyTitle">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__title" id="weeklyTitle">Week on week movement</h2>
+                            <p class="card__subtitle">Today vs seven days ago</p>
+                        </div>
+                        <button type="button" id="weeklyBtn" class="btn btn--subtle btn--sm">
+                            <span class="btn__spinner" aria-hidden="true"></span>
+                            Reload
+                        </button>
+                    </div>
+                    <div class="card__body card__body--flush">
+                        <div id="weeklyChart" class="chart"></div>
+                        <p class="chart-status" id="weeklyStatus" data-state="idle" role="status">Loading…</p>
+                    </div>
+                </section>
+
+                <section class="card" aria-labelledby="sixMonthTitle">
+                    <div class="card__header">
+                        <div>
+                            <h2 class="card__title" id="sixMonthTitle">Six month trend</h2>
+                            <p class="card__subtitle">Longer term price direction</p>
+                        </div>
+                        <button type="button" id="sixMonthBtn" class="btn btn--subtle btn--sm">
+                            <span class="btn__spinner" aria-hidden="true"></span>
+                            Reload
+                        </button>
+                    </div>
+                    <div class="card__body card__body--flush">
+                        <div id="sixMonthChart" class="chart"></div>
+                        <p class="chart-status" id="sixMonthStatus" data-state="idle" role="status">Loading…</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="app-footer">
+    <span>Prices are scraped from public supplier websites and are indicative only.</span>
+    <span>BT47/48 Oil Price Checker</span>
+</footer>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+</body>
+</html>
+
