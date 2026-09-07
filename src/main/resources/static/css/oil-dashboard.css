@@ -149,14 +149,17 @@ h1, h2, h3 {
 /* --------------------------------- Layout -------------------------------- */
 
 .app-main {
-    max-width: 1680px;
+    max-width: 2000px;
     margin: 0 auto;
     padding: var(--space-6);
 }
 
+/* The sidebar is a percentage of the available width (with a sane floor and
+   ceiling) so zooming out actually gives the price table more room, rather
+   than pinning it to a fixed pixel width while the text shrinks. */
 .layout {
     display: grid;
-    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+    grid-template-columns: clamp(400px, 30%, 560px) minmax(0, 1fr);
     gap: var(--space-5);
     align-items: start;
 }
@@ -412,24 +415,44 @@ h1, h2, h3 {
 .price-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 14px;
 }
 
 .price-table th,
 .price-table td {
-    padding: 11px var(--space-5);
+    padding: 11px var(--space-3);
     text-align: left;
     border-bottom: 1px solid var(--border);
-    white-space: nowrap;
+}
+
+/* Keep the outer gutters aligned with the card padding, but let the inner
+   column gaps stay tight so all three columns fit without scrolling. */
+.price-table th:first-child,
+.price-table td:first-child {
+    padding-left: var(--space-5);
+}
+
+.price-table th:last-child,
+.price-table td:last-child {
+    padding-right: var(--space-5);
+}
+
+/* Supplier names may wrap; numeric columns never should. */
+.price-table td:first-child {
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.35;
 }
 
 .price-table thead th {
     background: var(--surface-alt);
     font-size: 11.5px;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--text-muted);
+    white-space: nowrap;
     position: sticky;
     top: 0;
     z-index: 1;
@@ -438,6 +461,7 @@ h1, h2, h3 {
 .price-table td.num,
 .price-table th.num {
     text-align: right;
+    white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
 
@@ -466,14 +490,15 @@ h1, h2, h3 {
 .rank {
     display: inline-grid;
     place-items: center;
-    width: 22px;
-    height: 22px;
-    margin-right: var(--space-3);
+    width: 20px;
+    height: 20px;
+    margin-right: var(--space-2);
     border-radius: 50%;
     background: var(--neutral-100);
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
+    vertical-align: middle;
 }
 
 .is-best .rank {
@@ -490,6 +515,8 @@ h1, h2, h3 {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .badge--best {
@@ -617,7 +644,7 @@ h1, h2, h3 {
 
 @media (max-width: 1440px) {
     .layout {
-        grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+        grid-template-columns: clamp(380px, 34%, 460px) minmax(0, 1fr);
     }
 
     .chart {
@@ -669,9 +696,14 @@ h1, h2, h3 {
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
-    .price-table th,
-    .price-table td {
-        padding: 10px var(--space-4);
+    .price-table th:first-child,
+    .price-table td:first-child {
+        padding-left: var(--space-4);
+    }
+
+    .price-table th:last-child,
+    .price-table td:last-child {
+        padding-right: var(--space-4);
     }
 }
 
