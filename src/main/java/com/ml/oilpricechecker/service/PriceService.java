@@ -8,6 +8,7 @@ import com.ml.oilpricechecker.fetcher.PriceFetcher;
 import com.ml.oilpricechecker.models.PriceRequest;
 import com.ml.oilpricechecker.models.PriceResponse;
 import com.ml.oilpricechecker.models.builders.SupplierConfigBuilder;
+import com.ml.oilpricechecker.util.SSLUtilities;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -35,6 +36,7 @@ public class PriceService  {
     }
 
     public List<PriceResponse> getCurrentPrices(final int numberOfLitres) throws Exception {
+        SSLUtilities.disableSSLCertificateChecking();
 
         List<PriceRequest> priceRequestList = supplierConfigBuilder.buildPriceRequests(numberOfLitres);
 
