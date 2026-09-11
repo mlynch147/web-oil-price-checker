@@ -1,7 +1,6 @@
 package com.ml.oilpricechecker.service;
 
 import com.ml.oilpricechecker.models.weather.WeatherResponse;
-import com.ml.oilpricechecker.util.SSLUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +23,6 @@ public class WeatherService {
     }
 
     public void getMinAndMaxTemps() throws Exception {
-        SSLUtilities.disableSSLCertificateChecking();
 
         WeatherResponse response = restTemplate.getForObject(WEATHER_API, WeatherResponse.class);
 
