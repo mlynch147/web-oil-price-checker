@@ -1,0 +1,31 @@
+# AGENTS.md
+
+## Project Overview
+Spring Boot 3.3.4 (Java 17) app that scrapes/fetches home heating oil prices from ~8 local suppliers (BT47/BT48, NI area), stores historical trends, and serves a Thymeleaf dashboard with Highcharts. No database — all persistence is flat text files (`date=amount`), either on local disk or in S3.
+
+## Architecture & Data Flow
+1. **Startup**: `SupplierConfigBuilder` reads `src/main/resources/price_requests_config.json` (array of supplier configs: `displayName`, `fileName`, `url`, `pattern` regex, `requestType` GET/POST, `mediaType`, `payload`, `amountMapper`) and populates static maps in `constants/Constants`. `IFileHandler.initializeFiles()` copies bundled `resources/data/*.txt` to external storage if missing.
+2. **Fetching** (`fetcher/`): Strategy pattern — `GetPriceFetcher`/`PostPriceFetcher` extend `AbstractPriceFetcher` (5s `RestTemplate` timeout). Each supplier's HTML/JSON response is scraped via the regex `pattern` from its config using `PriceUtilities.extractPriceFromContent()`. `PriceService.getCurrentPrices(litres)` runs all suppliers **in parallel** via `CompletableFuture.supplyAsync()` + a shared `ExecutorService` (10 threads, bean in `AppConfig`). SSL verification is globally disabled (`SSLUtilities.disableSSLCertificateChecking()`) to tolerate suppliers' cert issues — don't "fix" this without checking why.
+3. **Scheduling** (`schedule/FetchPricesScheduler`): two cron jobs — `0 6 9,13,16 * * ?` (3x/day, writes 14-day + weekly data) and `0 59 8,12,15 ? * FRI` (Friday-only, writes 6-month data). Both call `PriceService` then `FileWriterService` (`@Async` writes).
+4. **Storage** (`file/`): `IFileHandler` has two implementations selected by Spring profile/bean wiring — `LocalFileHandler` (writes under `~/Library/Application Support/oilpricechecker/`, macOS-specific path) and `S3FileHandler` (bucket via `s3.bucketName` property, default `oil-price-checker-data-files`, region hardcoded `EU_WEST_2` in `AppConfig`). Rolling-window limits enforced on write: 14 days (chart), 8 entries (weekly comparison), 26 entries (six-month).
+5. **Serving**: `controllers/` expose JSON APIs consumed by `static/js/oil-dashboard.js` (vanilla JS, no framework) rendered into `templates/dashboard.html` (current UI) and legacy `index.html`. `ChartService` fills gaps in date series (carries forward last known price) before returning chart JSON.
+
+## Key Conventions (project-specific)
+- **Supplier config-driven, not hardcoded**: adding/changing a supplier means editing `price_requests_config.json`, NOT writing new fetcher code — the same `GetPriceFetcher`/`PostPriceFetcher` handle all suppliers via config (`url`, `pattern`, `payload` templates use `{numberOfLitres}` placeholder substitution). Only add a Java class when a supplier needs bespoke litre-amount logic (see `mappers/CraigFuelsAmountMapper`, referenced via `amountMapper` field in JSON, resolved by `AmountOfLitresMapper`).
+- **File format is `date=amount`** (one entry per line, amount in pence, e.g. `13/01/2025=1245.50`) — see `file/FileData`, `LocalFileHandler`, `S3FileHandler`. Both handlers must stay behaviorally identical since they implement the same `IFileHandler` contract and are interchangeable.
+- **Price data has two representations**: `PriceResponse` (raw fetch result: supplierName, price, litres) is mapped via `mappers/PriceMapper` into `Price` (display DTO with £-formatted price and computed pence-per-litre `(price/litres)*100`). Don't conflate the two models.
+- **Sorting**: cheapest-first via `comparators/PriceComparator`, which falls back to alphabetical-by-supplier when a price is unavailable ("N/A"/NaN) — always handle the NaN case the same way if adding new comparators.
+- Some controllers/services are intentionally stubs (`BulkDiscountController`/`Service`, `WeatherController`/`Service`) — not fully wired up; don't assume they work end-to-end.
+
+## Build & Run
+- Standard Maven project: `./mvnw spring-boot:run` (local dev, uses `LocalFileHandler` by default) or `./mvnw clean package`.
+- `Dockerfile` builds via `mvn clean install -DskipTests=true` then runs the jar on port 8080 — tests are skipped in the Docker build path.
+- No dedicated test suite of note: only `OilpricecheckerApplicationTests#contextLoads()` exists. If adding logic-heavy code (fetchers, mappers, comparators, file handlers), add real unit tests — there's no existing pattern to imitate, so use standard JUnit 5 + Mockito (already on classpath via `spring-boot-starter-test`).
+- `application.properties` is nearly empty (`spring.application.name` only); S3 bucket name and other runtime config come from `@Value`-annotated fields — check `S3FileHandler` before assuming a property exists.
+
+## Gotchas
+- `pom.xml` pins `jackson-bom.version` to 2.18.8 to patch specific CVEs (see comment) — don't let a dependency upgrade silently downgrade this.
+- AWS SDK v2 (`software.amazon.awssdk:s3`) is used, not v1 (there's a commented-out v1 dependency block in `pom.xml` — leave it commented, it's dead code kept for reference).
+- Region for S3 is hardcoded to `EU_WEST_2` in `AppConfig` — if adding new S3-backed resources, reuse the existing `S3Client` bean rather than creating a new one.
+- **IntelliJ "Could not find or load main class ...OilpricecheckerApplication" after a laptop restart**: this is IntelliJ's own incremental compiler ("Make") silently not producing `target/classes/**/*.class` (the module descriptor `oilpricechecker.iml` is local/gitignored and can get corrupted/truncated by an unclean shutdown, or the IDE's build-state cache thinks nothing changed and skips recompiling). `./mvnw compile` always works and proves the source/pom is fine. Fixed by: (1) repairing `oilpricechecker.iml` to include a proper `NewModuleRootManager` with source folders, and (2) enabling "Delegate IDE build/run actions to Maven" (`.idea/workspace.xml` → `MavenRunner` → `delegateBuildRun=true`) so the Run/Debug "Make" step always shells out to real Maven instead of trusting IntelliJ's own possibly-stale incremental build cache. If it ever recurs: run `./mvnw clean compile`, then in IntelliJ do Build ▸ Rebuild Project (or File ▸ Invalidate Caches / Restart) before re-running.
+
