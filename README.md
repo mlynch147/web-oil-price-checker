@@ -25,10 +25,54 @@ That's it — you do **not** need to install Maven separately; this project ship
 
 ## Getting Started
 
+### Install the prerequisites
+
+Only a **JDK (Java Development Kit) 17 or later** and **Git** need to be installed. If you already have Java 25, keep using it — you do not need a separate Java 17 installation.
+
+**macOS (the supported local storage setup)**
+
+If you use [Homebrew](https://brew.sh/), install Java 25 and Git with:
+
+```bash
+brew install --cask temurin@25
+brew install git
+```
+
+Without Homebrew, download the macOS JDK installer from [Eclipse Temurin](https://adoptium.net/temurin/releases/) (choose JDK 25 and the architecture matching your Mac). Install Git using the Xcode Command Line Tools:
+
+```bash
+xcode-select --install
+```
+
+**Windows**
+
+Install a JDK from [Eclipse Temurin](https://adoptium.net/temurin/releases/) and [Git for Windows](https://git-scm.com/downloads/win). Enable the JDK installer's `PATH` and `JAVA_HOME` options, then open a new terminal.
+
+**Ubuntu / Debian**
+
+```bash
+sudo apt update
+sudo apt install openjdk-17-jdk git
+```
+
+The current local storage path is macOS-specific; Windows and Linux users may need to adapt `LocalFileHandler` before running the app.
+
+Verify the tools are available:
+
+```bash
+java -version
+javac -version
+git --version
+```
+
+Both Java commands should report version 17 or later. No separate installation of **Maven, Spring Boot, Node.js, or a database** is needed: the Maven Wrapper downloads Maven and the project's dependencies, and the dashboard uses browser-side JavaScript.
+
+### Build and run
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-org-or-user>/oilpricechecker.git
-   cd oilpricechecker
+   git clone https://github.com/mlynch147/web-oil-price-checker.git
+   cd web-oil-price-checker
    ```
 
 2. Build the project:
@@ -41,6 +85,13 @@ That's it — you do **not** need to install Maven separately; this project ship
    ```bash
    ./mvnw spring-boot:run
    ```
+   On Windows, use `mvnw.cmd spring-boot:run` instead.
+
+   On Java 24 or later, explicitly enable native access to avoid Tomcat's startup warnings:
+   ```bash
+   ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="--enable-native-access=ALL-UNNAMED"
+   ```
+   In IntelliJ, add `--enable-native-access=ALL-UNNAMED` under **Run → Edit Configurations → Modify options → Add VM options**, not under Environment variables or Program arguments.
 
 4. Once it's started, open your browser at:
    ```
@@ -54,6 +105,8 @@ That's it — you do **not** need to install Maven separately; this project ship
 ./mvnw clean package
 java -jar target/oilpricechecker-0.0.1-SNAPSHOT.jar
 ```
+
+On Java 24 or later, use `java --enable-native-access=ALL-UNNAMED -jar target/oilpricechecker-0.0.1-SNAPSHOT.jar` to avoid the native-access warnings.
 
 ## Configuration
 
