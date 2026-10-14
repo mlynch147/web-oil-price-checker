@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project Overview
-Spring Boot 3.3.4 (Java 17) app that scrapes/fetches home heating oil prices from ~8 local suppliers (BT47/BT48, NI area), stores historical trends, and serves a Thymeleaf dashboard with Highcharts. No database — all persistence is flat text files (`date=amount`), either on local disk or in S3.
+Spring Boot 3.3.4 (Java 17 bytecode target; can build and run with Java 25) app that scrapes/fetches home heating oil prices from ~8 local suppliers (BT47/BT48, NI area), stores historical trends, and serves a Thymeleaf dashboard with Highcharts. No database — all persistence is flat text files (`date=amount`), either on local disk or in S3.
 
 ## Architecture & Data Flow
 1. **Startup**: `SupplierConfigBuilder` reads `src/main/resources/price_requests_config.json` (array of supplier configs: `displayName`, `fileName`, `url`, `pattern` regex, `requestType` GET/POST, `mediaType`, `payload`, `amountMapper`) and populates static maps in `constants/Constants`. `IFileHandler.initializeFiles()` copies bundled `resources/data/*.txt` to external storage if missing.
@@ -28,4 +28,3 @@ Spring Boot 3.3.4 (Java 17) app that scrapes/fetches home heating oil prices fro
 - AWS SDK v2 (`software.amazon.awssdk:s3`) is used, not v1 (there's a commented-out v1 dependency block in `pom.xml` — leave it commented, it's dead code kept for reference).
 - Region for S3 is hardcoded to `EU_WEST_2` in `AppConfig` — if adding new S3-backed resources, reuse the existing `S3Client` bean rather than creating a new one.
 - **IntelliJ "Could not find or load main class ...OilpricecheckerApplication" after a laptop restart**: this is IntelliJ's own incremental compiler ("Make") silently not producing `target/classes/**/*.class` (the module descriptor `oilpricechecker.iml` is local/gitignored and can get corrupted/truncated by an unclean shutdown, or the IDE's build-state cache thinks nothing changed and skips recompiling). `./mvnw compile` always works and proves the source/pom is fine. Fixed by: (1) repairing `oilpricechecker.iml` to include a proper `NewModuleRootManager` with source folders, and (2) enabling "Delegate IDE build/run actions to Maven" (`.idea/workspace.xml` → `MavenRunner` → `delegateBuildRun=true`) so the Run/Debug "Make" step always shells out to real Maven instead of trusting IntelliJ's own possibly-stale incremental build cache. If it ever recurs: run `./mvnw clean compile`, then in IntelliJ do Build ▸ Rebuild Project (or File ▸ Invalidate Caches / Restart) before re-running.
-

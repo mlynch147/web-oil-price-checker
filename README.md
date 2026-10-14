@@ -4,7 +4,7 @@ A Spring Boot web app that fetches home heating oil prices from local suppliers 
 
 ## Tech Stack
 
-- Java 17
+- Java 17 bytecode baseline (runs on Java 25)
 - Spring Boot 3.3.4 (Web, Thymeleaf, Scheduling, Async)
 - Maven (via the included Maven Wrapper — no local Maven install required)
 - Vanilla JS / Highcharts for the dashboard UI
@@ -12,7 +12,7 @@ A Spring Boot web app that fetches home heating oil prices from local suppliers 
 
 ## Prerequisites
 
-- **Java 17** (or later) — [Eclipse Temurin](https://adoptium.net/) or [Amazon Corretto](https://aws.amazon.com/corretto/) both work.
+- **Java 17 or later** — including [Eclipse Temurin 25](https://adoptium.net/). The app compiles to Java 17-compatible bytecode even when built with Java 25; a separate Java 17 installation is not required.
   Check your version:
   ```bash
   java -version
@@ -89,4 +89,3 @@ src/main/java/com/ml/oilpricechecker/
 
 - Scheduled jobs automatically fetch and store prices 3x/day, plus a weekly Friday job — no manual intervention is needed once the app is running, but it must stay running for these to fire.
 - SSL certificate verification is intentionally relaxed for some supplier requests due to certificate issues on their end — this is a deliberate workaround, not an oversight.
-
